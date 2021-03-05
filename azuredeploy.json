@@ -77,7 +77,161 @@
             "defaultValue": {
                 "Project": "jumpstart_arcbox"
             }
-        }        
+        },
+        "sshRSAPublicKey": {
+            "type": "string"
+        },
+        "SPN_CLIENT_ID": {
+            "type": "string"
+        },
+        "SPN_CLIENT_SECRET": {
+            "type": "string"
+        },
+        "SPN_TENANT_ID": {
+            "type": "string"
+        },
+        "clusterName": {
+            "type": "string",
+            "defaultValue": "arcBoxCluster"
+        },
+        "kubernetesVersion": {
+            "defaultValue": "1.18.10",
+            "type": "string",
+            "metadata": {
+                "description": "The version of Kubernetes"
+            }
+        },
+        "agentCount": {
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "The number of nodes for the cluster"
+            },
+            "minValue": 1,
+            "maxValue": 50
+        },
+        "agentVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D8s_v3",
+            "metadata": {
+                "description": "The size of the Virtual Machine"
+            }
+        },
+        "nodeAdminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "User name for the Linux Virtual Machines"
+            }
+        },
+        "enableRBAC": {
+            "defaultValue": true,
+            "type": "bool",
+            "metadata": {
+                "description": "boolean flag to turn on and off of RBAC"
+            }
+        },        
+        "osType": {
+            "type": "string",
+            "defaultValue": "Linux",
+            "allowedValues": [
+                "Linux"
+            ],
+            "metadata": {
+                "description": "The type of operating system"
+            }
+        },
+        "dnsPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+            }
+        },
+        "osDiskSizeGB": {
+            "type": "int",
+            "defaultValue": 0,
+            "metadata": {
+                "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agent VM size."
+            },
+            "minValue": 0,
+            "maxValue": 1023
+        },
+        "AZDATA_USERNAME": {
+            "type": "string",
+            "value": "arcdemo",
+            "metadata": {
+                "description": "Arc Data Controller Username"
+            }
+        },
+        "AZDATA_PASSWORD": {
+            "type": "string",
+            "value": "ArcPassword123!!",
+            "metadata": {
+                "description": "Arc Data Controller Password"
+            }
+        },
+        "ACCEPT_EULA": {
+            "type": "string",
+            "defaultValue":"yes",
+            "metadata": {
+                "description": "azdata CLI EULA"
+            }
+        },
+        "REGISTRY_USERNAME": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Azure Arc Data Container Registry Username"
+            }
+        },
+        "REGISTRY_PASSWORD": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Azure Arc Data Container Registry Password"
+            }
+        },
+        "ARC_DC_NAME": {
+            "type": "string",
+            "value": "arcdatactrl",
+            "metadata": {
+                "description": "Arc Data Controller name"
+            }
+        },
+        "ARC_DC_SUBSCRIPTION": {
+            "type": "string",
+            "metadata": {
+                "description": "Arc Data Controller subscription ID"
+            }
+        },
+        "SPN_AUTHORITY": {
+            "type": "string",
+            "metadata": {
+                "description": "The Service Principal authority"
+            }
+        },
+        "DOCKER_REGISTRY": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Azure Arc Data Container Registry"
+            }
+        },
+        "DOCKER_REPOSITORY": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Azure Arc Data Container Registry Repository"
+            }
+        },
+        "DOCKER_TAG": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Azure Arc Data Container Image Tag"
+            }
+        },      
+        "MSSQL_MI_NAME": {
+            "type": "string",
+            "defaultValue": "arcsqlmidemo"
+            "metadata": {
+                "description": "MSSQL instance name to be deployed on the Kubernetes cluster"
+            }
+        }
     },
     "variables": {
         "vmName": "[concat(parameters('vmName'))]",
@@ -256,13 +410,47 @@
               "fileUris": [
                 "https://arcinbox.blob.core.windows.net/scripts/Bootstrap.ps1"
               ],
-              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('adminUsername'))]" 
+              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('adminUsername'), ' -SPN_CLIENT_ID ', parameters('SPN_CLIENT_ID'), ' -SPN_CLIENT_SECRET ', parameters('SPN_CLIENT_SECRET'), ' -SPN_TENANT_ID ', parameters('SPN_TENANT_ID'), ' -SPN_AUTHORITY ', parameters('SPN_AUTHORITY'), ' -clusterName ', parameters('clusterName'), ' -resourceGroup ', parameters('resourceGroup'), ' -AZDATA_USERNAME ', parameters('AZDATA_USERNAME'), ' -AZDATA_PASSWORD ', parameters('AZDATA_PASSWORD'), ' -ACCEPT_EULA ', parameters('ACCEPT_EULA'), ' -REGISTRY_USERNAME ', parameters('REGISTRY_USERNAME'), ' -REGISTRY_PASSWORD ', parameters('REGISTRY_PASSWORD'), ' -ARC_DC_NAME ', parameters('ARC_DC_NAME'), ' -ARC_DC_SUBSCRIPTION ', parameters('ARC_DC_SUBSCRIPTION'), ' -ARC_DC_REGION ', parameters('location'), ' -MSSQL_MI_NAME ', parameters('MSSQL_MI_NAME'), ' -DOCKER_REGISTRY ', parameters('DOCKER_REGISTRY'), ' -DOCKER_REPOSITORY ', parameters('DOCKER_REPOSITORY'), ' -DOCKER_TAG ', parameters('DOCKER_TAG'))]" 
             }            
           }
-        }                        
-    ],
-
-    
+        },
+        {
+            "apiVersion": "2020-03-01",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "location": "[parameters('location')]",
+            "name": "[parameters('clusterName')]",
+            "tags": "[parameters('resourceTags')]",
+            "properties": {
+                "kubernetesVersion": "[parameters('kubernetesVersion')]",
+                "enableRBAC": "[parameters('enableRBAC')]",                
+                "dnsPrefix": "[parameters('dnsPrefix')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
+                        "count": "[parameters('agentCount')]",
+                        "vmSize": "[parameters('agentVMSize')]",
+                        "osType": "[parameters('osType')]",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "[parameters('nodeAdminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshRSAPublicKey')]"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('SPN_CLIENT_ID')]",
+                    "Secret": "[parameters('SPN_CLIENT_SECRET')]"
+                }
+            }
+        }   
+    ],  
     "outputs": {
         "adminUsername": {
             "type": "string",
