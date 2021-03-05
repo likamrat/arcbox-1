@@ -157,14 +157,14 @@
         },
         "AZDATA_USERNAME": {
             "type": "string",
-            "value": "arcdemo",
+            "defaultValue": "arcdemo",
             "metadata": {
                 "description": "Arc Data Controller Username"
             }
         },
         "AZDATA_PASSWORD": {
             "type": "string",
-            "value": "ArcPassword123!!",
+            "defaultValue": "ArcPassword123!!",
             "metadata": {
                 "description": "Arc Data Controller Password"
             }
@@ -178,19 +178,21 @@
         },
         "REGISTRY_USERNAME": {
             "type": "string",
+            "defaultValue": "not_specified",
             "metadata": {
                 "description": "Private Azure Arc Data Container Registry Username"
             }
         },
         "REGISTRY_PASSWORD": {
             "type": "string",
+            "defaultValue": "not_specified",
             "metadata": {
                 "description": "Private Azure Arc Data Container Registry Password"
             }
         },
         "ARC_DC_NAME": {
             "type": "string",
-            "value": "arcdatactrl",
+            "defaultValue": "arcdatactrl",
             "metadata": {
                 "description": "Arc Data Controller name"
             }
@@ -203,31 +205,35 @@
         },
         "SPN_AUTHORITY": {
             "type": "string",
+            "defaultValue": "https://login.microsoftonline.com",
             "metadata": {
                 "description": "The Service Principal authority"
             }
         },
         "DOCKER_REGISTRY": {
             "type": "string",
+            "defaultValue": "mcr.microsoft.com",
             "metadata": {
                 "description": "Private Azure Arc Data Container Registry"
             }
         },
         "DOCKER_REPOSITORY": {
             "type": "string",
+            "defaultValue": "arcdata",
             "metadata": {
                 "description": "Private Azure Arc Data Container Registry Repository"
             }
         },
         "DOCKER_TAG": {
             "type": "string",
+            "defaultValue": "latest",
             "metadata": {
                 "description": "Private Azure Arc Data Container Image Tag"
             }
         },      
         "MSSQL_MI_NAME": {
             "type": "string",
-            "defaultValue": "arcsqlmidemo"
+            "defaultValue": "arcsqlmidemo",
             "metadata": {
                 "description": "MSSQL instance name to be deployed on the Kubernetes cluster"
             }
