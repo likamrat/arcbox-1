@@ -90,8 +90,8 @@ workflow ClientTools_01
                             }
                         }                        
                     }
-                    Invoke-WebRequest "https://arcinbox.blob.core.windows.net/scripts/LogonScript.ps1" -OutFile "C:\ArcBox\LogonScript.ps1"
-                    Invoke-WebRequest "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/SQLMIScript.ps1?token=AHVYEXI2SERE3DJXRQ3AD53AIKUQS" -OutFile "C:\ArcBox\SQLMIScript.ps1"
+                    Invoke-WebRequest "https://arcboxstoragedk.blob.core.windows.net/arctemplates/LogonScript.ps1" -OutFile "C:\ArcBox\LogonScript.ps1"
+                    Invoke-WebRequest "https://arcboxstoragedk.blob.core.windows.net/arctemplates/SQLMIScript.ps1" -OutFile "C:\ArcBox\SQLMIScript.ps1"
                     Invoke-WebRequest "https://azuredatastudio-update.azurewebsites.net/latest/win32-x64-archive/stable" -OutFile "C:\ArcBox\azuredatastudio.zip"
                     Invoke-WebRequest "https://aka.ms/azdata-msi" -OutFile "C:\ArcBox\AZDataCLI.msi"
                     Invoke-WebRequest "https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_arc_data_jumpstart/aks/arm_template/mssql_mi/settings_template.json" -OutFile "C:\ArcBox\settings_template.json"
