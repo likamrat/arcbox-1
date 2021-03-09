@@ -43,6 +43,38 @@
             },
             "spnClientSecret": {
               "value": "[parameters('spnClientSecret')]"
+            },
+            "azureLocation": {
+                "value": "eastus"
+            },
+            "resourceTags": {
+                "value": {
+                    "Project": "jumpstart_arcbox"
+                }
+            },
+            "clusterName": {
+                "value": "arcBoxCluster"
+            },
+            "kubernetesVersion": {
+                "value": "1.18.10"
+            },
+            "agentCount": {
+                "value": 3
+            },
+            "agentVMSize": {
+                "value": "Standard_D8s_v3"
+            },
+            "nodeAdminUsername": {
+                "value": "arcdemo"
+            },
+            "enableRBAC": {
+                "value": true
+            },
+            "osType": {
+                "value": "Linux"
+            },
+            "osDiskSizeGB": {
+                "value": 0
             }
           }
         }
