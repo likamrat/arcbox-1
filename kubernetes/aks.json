@@ -75,7 +75,7 @@
                 "description": "The type of operating system"
             }
         },
-        "dnsPrefix": {
+        "aksDnsPrefix": {
             "type": "string",
             "metadata": {
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
@@ -101,7 +101,7 @@
         "properties": {
             "kubernetesVersion": "[parameters('kubernetesVersion')]",
             "enableRBAC": "[parameters('enableRBAC')]",                
-            "dnsPrefix": "[parameters('dnsPrefix')]",
+            "aksDnsPrefix": "[parameters('aksDnsPrefix')]",
             "agentPoolProfiles": [
                 {
                     "name": "agentpool",

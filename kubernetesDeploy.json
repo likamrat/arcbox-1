@@ -11,7 +11,7 @@
       "spnClientSecret": {
           "type": "string"
       },
-      "dnsPrefix": {
+      "aksDnsPrefix": {
         "type": "string"
       }
     },
@@ -32,8 +32,8 @@
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
-            "dnsPrefix": {
-              "value": "[parameters('dnsPrefix')]"
+            "aksDnsPrefix": {
+              "value": "[parameters('aksDnsPrefix')]"
             },
             "sshRSAPublicKey": {
               "value": "[parameters('sshRSAPublicKey')]"
