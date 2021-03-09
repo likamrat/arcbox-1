@@ -75,7 +75,7 @@ Stop-Transcript
 
 '@ > C:\ArcBox\sql_connectivity.ps1
 
-Start-Transcript -Path C:\tmp\LogonScript.log
+Start-Transcript -Path C:\ArcBox\SQLMIScript.log
 
 $azurePassword = ConvertTo-SecureString $env:SPN_CLIENT_SECRET -AsPlainText -Force
 $psCred = New-Object System.Management.Automation.PSCredential($env:SPN_CLIENT_ID , $azurePassword)
