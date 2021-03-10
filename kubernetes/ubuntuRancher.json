@@ -81,7 +81,7 @@
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
         "osDiskType": "Premium_LRS",
         "subnetAddressPrefix": "172.16.1.0/24",
-        "addressPrefix": "172.16.1.0/16"
+        "addressPrefix": "172.16.0.0/16"
     },
     "resources": [
     {
