@@ -101,7 +101,7 @@
         "properties": {
             "kubernetesVersion": "[parameters('kubernetesVersion')]",
             "enableRBAC": "[parameters('enableRBAC')]",                
-            "aksDnsPrefix": "[parameters('aksDnsPrefix')]",
+            "dnsPrefix": "[parameters('aksDnsPrefix')]",
             "agentPoolProfiles": [
                 {
                     "name": "agentpool",
