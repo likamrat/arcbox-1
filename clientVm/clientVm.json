@@ -16,7 +16,7 @@
                 "description": "Username for the Virtual Machine"
             }
         },
-        "adminPassword": {
+        "windowsAdminPassword": {
             "type": "securestring",
             "defaultValue": "ArcPassword123!!",
             "metadata": {
@@ -233,7 +233,7 @@
                 "osProfile": {
                     "computerName": "[variables('vmName')]",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminPassword": "[parameters('windowsAdminPassword')]"
                 }
             }
         },
