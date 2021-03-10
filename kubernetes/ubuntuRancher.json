@@ -48,21 +48,21 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "Arc-K3s-Demo-VNET",
+            "defaultValue": "ArcBox-VNET",
             "metadata": {
                 "description": "Name of the VNET"
             }
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "Subnet",
+            "defaultValue": "Rancher-Subnet",
             "metadata": {
                 "description": "Name of the subnet in the virtual network"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "Arc-K3s-Demo-NSG",
+            "defaultValue": "ArcBox-NSG",
             "metadata": {
                 "description": "Name of the Network Security Group"
             }
