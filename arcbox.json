@@ -14,7 +14,7 @@
       "aksDnsPrefix": {
         "type": "string"
       },
-      "adminUsername": {
+      "windowsAdminUsername": {
         "type": "string"
       },
       "windowsAdminPassword": {
@@ -114,8 +114,8 @@
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
-            "adminUsername": {
-              "value": "[parameters('adminUsername')]"
+            "windowsAdminUsername": {
+              "value": "[parameters('windowsAdminUsername')]"
             },
             "windowsAdminPassword": {
                 "value": "[parameters('windowsAdminPassword')]"

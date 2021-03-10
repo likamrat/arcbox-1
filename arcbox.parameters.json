@@ -14,7 +14,7 @@
         "spnClientSecret": {
             "value": "<your service principal secret>"
         },
-        "adminUsername": {
+        "windowsAdminUsername": {
             "value": "arcdemo"
         },
         "windowsAdminPassword": {

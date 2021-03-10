@@ -9,7 +9,7 @@
                 "description": "The name of you Virtual Machine"
             }
         },
-        "adminUsername": {
+        "windowsAdminUsername": {
             "type": "string",
             "defaultValue": "arcdemo",
             "metadata": {
@@ -225,7 +225,7 @@
                 },
                 "osProfile": {
                     "computerName": "[variables('vmName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminUsername": "[parameters('windowsAdminUsername')]",
                     "adminPassword": "[parameters('windowsAdminPassword')]"
                 }
             }
@@ -260,7 +260,7 @@
     "outputs": {
         "adminUsername": {
             "type": "string",
-            "value": "[parameters('adminUsername')]"
+            "value": "[parameters('windowsAdminUsername')]"
         },
         "publicIP": {
             "type": "string",
