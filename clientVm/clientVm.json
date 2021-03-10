@@ -250,13 +250,12 @@
               "fileUris": [
                 "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
               ],
-              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('adminUsername'))]" 
+              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'))]" 
             }            
           }
         }                        
     ],
 
-    
     "outputs": {
         "adminUsername": {
             "type": "string",
