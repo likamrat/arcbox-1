@@ -55,7 +55,7 @@
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "Rancher-Subnet",
+            "defaultValue": "ArcBox-Subnet",
             "metadata": {
                 "description": "Name of the subnet in the virtual network"
             }
@@ -80,8 +80,8 @@
         "networkInterfaceName": "[concat(parameters('vmName'),'-NIC')]",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
         "osDiskType": "Premium_LRS",
-        "subnetAddressPrefix": "10.1.0.0/24",
-        "addressPrefix": "10.1.0.0/16"
+        "subnetAddressPrefix": "172.16.1.0/24",
+        "addressPrefix": "172.16.1.0/16"
     },
     "resources": [
     {
