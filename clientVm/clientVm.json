@@ -86,7 +86,8 @@
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
         "osDiskType": "Premium_LRS",
         "subnetAddressPrefix": "172.16.1.0/24",
-        "addressPrefix": "172.16.0.0/16"
+        "addressPrefix": "172.16.0.0/16",
+        "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/"
     },
     "resources": [
         {
@@ -254,7 +255,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://arcinbox.blob.core.windows.net/scripts/Bootstrap.ps1"
+                "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
               ],
               "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('adminUsername'))]" 
             }            

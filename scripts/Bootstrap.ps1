@@ -1,3 +1,4 @@
+# Inject environment variables from parameters
 param (
     [string]$adminUsername
 )

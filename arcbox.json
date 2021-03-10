@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sshRSAPublicKey": {
+        "type": "string"
+      },
+      "spnClientId": {
+        "type": "string"
+      },
+      "spnClientSecret": {
+          "type": "string"
+      },
+      "aksDnsPrefix": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "windowsAdminPassword": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
+      "aksTemplateUrl": "[uri(variables('templateBaseUrl'), 'kubernetes/aks.json')]",
+      "rancherTemplateUrl": "[uri(variables('templateBaseUrl'), 'kubernetes/ubuntuRancher.json')]",
+      "clientVmTemplateUrl": "[uri(variables('templateBaseUrl'), 'clientVm/clientVm.json')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "aksDeployment",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('aksTemplateUrl')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "aksDnsPrefix": {
+              "value": "[parameters('aksDnsPrefix')]"
+            },
+            "sshRSAPublicKey": {
+              "value": "[parameters('sshRSAPublicKey')]"
+            },
+            "spnClientId": {
+              "value": "[parameters('spnClientId')]"
+            },
+            "spnClientSecret": {
+              "value": "[parameters('spnClientSecret')]"
+            },
+            "azureLocation": {
+                "value": "eastus"
+            },
+            "resourceTags": {
+                "value": {
+                    "Project": "jumpstart_arcbox"
+                }
+            },
+            "clusterName": {
+                "value": "arcBoxCluster"
+            },
+            "kubernetesVersion": {
+                "value": "1.18.10"
+            },
+            "agentCount": {
+                "value": 3
+            },
+            "agentVMSize": {
+                "value": "Standard_D8s_v3"
+            },
+            "nodeAdminUsername": {
+                "value": "arcdemo"
+            },
+            "enableRBAC": {
+                "value": true
+            },
+            "osType": {
+                "value": "Linux"
+            },
+            "osDiskSizeGB": {
+                "value": 0
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "ubuntuRancherDeployment",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('rancherTemplateUrl')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "sshRSAPublicKey": {
+              "value": "[parameters('sshRSAPublicKey')]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "clientVmDeployment",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('clientVmTemplateUrl')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "[parameters('adminUsername')]"
+            },
+            "windowsAdminPassword": {
+                "value": "[parameters('windowsAdminPassword')]"
+            }
+          }
+        }
+      }
+    ]
+  }
