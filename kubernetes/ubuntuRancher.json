@@ -62,7 +62,7 @@
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "ArcBox-NSG",
+            "defaultValue": "ArcK3s-NSG",
             "metadata": {
                 "description": "Name of the Network Security Group"
             }
