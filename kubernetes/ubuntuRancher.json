@@ -4,7 +4,7 @@
     "parameters": {
         "vmName": {
             "type": "string",
-            "defaultValue": "Arc-K3s-Demo",
+            "defaultValue": "Arc-K3s",
             "metadata": {
                 "description": "The name of you Virtual Machine."
             }
