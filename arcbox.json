@@ -22,6 +22,10 @@
       },
       "windowsAdminPassword": {
         "type": "string"
+      },
+      "aksClusterName": {
+        "type": "string",
+        "defaultValue": "aksArcboxCluster"
       }
     },
     "variables": {
@@ -63,7 +67,7 @@
                 }
             },
             "clusterName": {
-                "value": "arcBoxCluster"
+                "value": "[parameters('aksClusterName')]"
             },
             "kubernetesVersion": {
                 "value": "1.18.10"
@@ -132,6 +136,9 @@
             },
             "spnTenantId": {
               "value": "[parameters('spnTenantId')]"
+            },
+            "aksClusterName": {
+              "value": "[parameters('aksClusterName')]"
             }
           }
         }
