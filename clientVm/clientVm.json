@@ -72,17 +72,26 @@
             }
         },
         "spnClientId": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Client id of the service principal"
+            }
         },
         "spnClientSecret": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Client secret of the service principal"
+            }
         },
         "spnAuthority": {
             "type": "string",
             "defaultValue": "https://login.microsoftonline.com"
         },
         "spnTenantId": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Tenant id of the service principal"
+            }
         },
         "clusterName": {
             "type": "string",
