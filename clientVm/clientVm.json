@@ -119,7 +119,7 @@
         },
         "arcDcName": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "arcdatactrl"
         },
         "mssqlmiName": {
             "type": "string",
