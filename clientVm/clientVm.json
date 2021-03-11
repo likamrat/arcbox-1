@@ -111,11 +111,11 @@
         },
         "registryUsername": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "registryUser"
         },
         "registryPassword": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "registrySecret"
         },
         "arcDcName": {
             "type": "string",
@@ -127,15 +127,15 @@
         },
         "dockerRegistry": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "mcr.microsoft.com"
         },
         "dockerRepository": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "arcdata"
         },
         "dockerTag": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "latest"
         }
     },
     "variables": {
