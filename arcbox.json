@@ -11,6 +11,9 @@
       "spnClientSecret": {
           "type": "string"
       },
+      "spnTenantId": {
+        "type": "string"
+      },
       "aksDnsPrefix": {
         "type": "string"
       },
@@ -120,6 +123,15 @@
             },
             "windowsAdminPassword": {
                 "value": "[parameters('windowsAdminPassword')]"
+            },
+            "spnClientId": {
+              "value": "[parameters('spnClientId')]"
+            },
+            "spnClientSecret": {
+              "value": "[parameters('spnClientSecret')]"
+            },
+            "spnTenantId": {
+              "value": "[parameters('spnTenantId')]"
             }
           }
         }
