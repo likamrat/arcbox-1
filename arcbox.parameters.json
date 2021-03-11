@@ -14,6 +14,9 @@
         "spnClientSecret": {
             "value": "<your service principal secret>"
         },
+        "spnTenantId": {
+            "value": "<your spn tenant id>"
+        },
         "windowsAdminUsername": {
             "value": "arcdemo"
         },

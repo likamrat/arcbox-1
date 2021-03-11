@@ -24,10 +24,10 @@
             }
         },       
         "windowsOSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "metadata": {
-            "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version"
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
+            "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version"
             }
         },
         "location": {
@@ -70,7 +70,64 @@
             "defaultValue": {
                 "Project": "jumpstart_arcbox"
             }
-        }        
+        },
+        "spnClientId": {
+            "type": "string"
+        },
+        "spnClientSecret": {
+            "type": "string"
+        },
+        "spnAuthority": {
+            "type": "string",
+            "defaultValue": "https://login.microsoftonline.com"
+        },
+        "spnTenantId": {
+            "type": "string"
+        },
+        "clusterName": {
+            "type": "string",
+            "defaultValue": "Arc-Data-SQLMI-AKS"
+        },
+        "azdataUsername": {
+            "type": "string",
+            "defaultValue": "arcdemo"
+        },
+        "azdataPassword": {
+            "type": "string",
+            "defaultValue": "ArcPassword123!!"
+        },
+        "acceptEula": {
+            "type": "string",
+            "defaultValue": "yes"
+        },
+        "registryUsername": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "registryPassword": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "arcDcName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "mssqlmiName": {
+            "type": "string",
+            "defaultValue": "arcsqlmidemo"
+        },
+        "dockerRegistry": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "dockerRepository": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "dockerTag": {
+            "type": "string",
+            "defaultValue": ""
+        }
     },
     "variables": {
         "vmName": "[concat(parameters('vmName'))]",
@@ -250,7 +307,7 @@
               "fileUris": [
                 "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
               ],
-              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'))]" 
+              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription(), ' -clusterName ', parameters('clusterName'), ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -registryUsername ', parameters('registryUsername'), ' -registryPassword ', parameters('registryPassword'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -mssqlmiName ', parameters('mssqlmiName'), ' -dockerRegistry ', parameters('dockerRegistry'), ' -dockerRepository ', parameters('dockerRepository'), ' -dockerTag ', parameters('dockerTag'))]" 
             }            
           }
         }                        

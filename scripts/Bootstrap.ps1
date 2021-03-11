@@ -15,7 +15,6 @@ param (
     [string]$arcDcName,
     [string]$azureLocation,
     [string]$mssqlmiName,
-    [string]$chocolateyAppList,
     [string]$dockerRegistry,
     [string]$dockerRepository,
     [string]$dockerTag
