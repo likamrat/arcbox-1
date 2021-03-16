@@ -22,6 +22,15 @@
         },
         "windowsAdminPassword": {
             "value": "ArcPassword123!!"
+        },
+        "myIpAddress": {
+            "value": "<your IP address>"
+        },
+        "workspaceName": {
+            "value": "<your unique Log Analytics workspace name>"
+        },
+        "automationAccountName": {
+            "value": "<your Automation Account name>"
         }
     }
 }
