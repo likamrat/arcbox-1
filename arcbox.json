@@ -2,30 +2,60 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "myIpAddress": {
+        "type": "string",
+        "metadata": {
+            "description": "IP address allowed SSH and RDP access to ArcBox resources. Usually this is your home or office public IP address."
+          }
+      },
       "sshRSAPublicKey": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "RSA public key used for securing SSH access to ArcBox resources."
+          }
       },
       "spnClientId": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "Azure service principal client id"
+          }
       },
       "spnClientSecret": {
-          "type": "string"
+          "type": "string",
+          "metadata": {
+            "description": "Azure service principal client secret"
+          }
       },
       "spnTenantId": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "Azure AD tenant id for your service principal"
+          }
       },
       "aksDnsPrefix": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "DNS prefix used for your AKS cluster"
+          }
       },
       "windowsAdminUsername": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "Username for Windows account"
+          }
       },
       "windowsAdminPassword": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+            "description": "Password for Windows account"
+          }
       },
       "aksClusterName": {
         "type": "string",
-        "defaultValue": "aksArcboxCluster"
+        "defaultValue": "aksArcboxCluster",
+        "metadata": {
+            "description": "Name for your AKS cluster"
+          }
       }
     },
     "variables": {
@@ -106,6 +136,9 @@
           "parameters": {
             "sshRSAPublicKey": {
               "value": "[parameters('sshRSAPublicKey')]"
+            },
+            "myIpAddress": {
+              "value": "[parameters('myIpAddress')]"
             }
           }
         }
@@ -139,6 +172,9 @@
             },
             "aksClusterName": {
               "value": "[parameters('aksClusterName')]"
+            },
+            "myIpAddress": {
+              "value": "[parameters('myIpAddress')]"
             }
           }
         }
