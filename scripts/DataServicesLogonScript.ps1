@@ -51,12 +51,10 @@ azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-pr
 
 azdata arc sql mi list
 
-# Restore demo AdventureWorks database and configure Azure Data Studio
-
 # Downloading demo database and restoring onto SQL MI
 $podname = "$env:mssqlmiName" + "-0"
 kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak | Out-Null
-kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:azdataUsername -P $env:azdataPassword -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" | Out-Null
+kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" | Out-Null
 
 Write-Host ""
 Write-Host "Creating Azure Data Studio settings for SQL Managed Instance connection"
@@ -71,8 +69,8 @@ $string.Substring(0, $string.IndexOf(',')) | Set-Content $file
 $sql = Get-Content $file
 
 (Get-Content -Path $settingsFile) -replace 'arc_sql_mi',$sql | Set-Content -Path $settingsFile
-(Get-Content -Path $settingsFile) -replace 'sa_username',$env:azdataUsername | Set-Content -Path $settingsFile
-(Get-Content -Path $settingsFile) -replace 'sa_password',$env:azdataPassword | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'sa_username',$env:AZDATA_USERNAME | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'sa_password',$env:AZDATA_PASSWORD | Set-Content -Path $settingsFile
 (Get-Content -Path $settingsFile) -replace 'false','true' | Set-Content -Path $settingsFile
 
 # Starting Azure Data Studio
