@@ -21,24 +21,24 @@ param (
 )
 
 [System.Environment]::SetEnvironmentVariable('adminUsername', $adminUsername,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('SPN_CLIENT_ID', $spnClientId,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('SPN_CLIENT_SECRET', $spnClientSecret,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('SPN_TENANT_ID', $spnTenantId,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('SPN_AUTHORITY', $spnAuthority,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('spnClientID', $spnClientId,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('spnClientSecret', $spnClientSecret,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('spnTenantId', $spnTenantId,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('spnAuthority', $spnAuthority,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('clusterName', $clusterName,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('resourceGroup', $resourceGroup,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('AZDATA_USERNAME', $azdataUsername,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('AZDATA_PASSWORD', $azdataPassword,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('ACCEPT_EULA', $acceptEula,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('REGISTRY_USERNAME', $registryUsername,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('REGISTRY_PASSWORD', $registryPassword,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('ARC_DC_NAME', $arcDcName,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('ARC_DC_SUBSCRIPTION', $subscriptionId,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('ARC_DC_REGION', $azureLocation,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('MSSQL_MI_NAME', $mssqlmiName,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('DOCKER_REGISTRY', $dockerRegistry,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('DOCKER_REPOSITORY', $dockerRepository,[System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable('DOCKER_TAG', $dockerTag,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('azdataUsername', $azdataUsername,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('azdataPassword', $azdataPassword,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('acceptEula', $acceptEula,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('registryUsername', $registryUsername,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('registryPassword', $registryPassword,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('arcDcName', $arcDcName,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('subscriptionId', $subscriptionId,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('azureLocation', $azureLocation,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('mssqlmiName', $mssqlmiName,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('dockerRegistry', $dockerRegistry,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('dockerRepository', $dockerRepository,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('dockerTag', $dockerTag,[System.EnvironmentVariableTarget]::Machine)
 
 # Create path
 Write-Output "Create ArcBox path"
@@ -54,8 +54,6 @@ New-Item -Path $agentScript -ItemType directory -Force
 Start-Transcript "C:\ArcBox\Bootstrap.log"
 
 $ErrorActionPreference = 'SilentlyContinue'
-
-# $sourceFolder = "https://arcinbox.blob.core.windows.net/vhds"
 
 # Uninstall Internet Explorer
 Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart
@@ -76,15 +74,13 @@ Disable-ieESC
 Write-Host "Extending C:\ partition to the maximum size"
 Resize-Partition -DriveLetter C -Size $(Get-PartitionSupportedSize -DriveLetter C).SizeMax
 
+# Installing Posh-SSH PowerShell Module
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module -Name Posh-SSH -Force
+
 # Installing DHCP service 
 Write-Output "Installing DHCP service"
 Install-WindowsFeature -Name "DHCP" -IncludeManagementTools
-
-# Install Windows Subsystem for Linux
-# Used for Bash shell to SSH to the ArcBoxUbuntu
-# Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
-# dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
 
 # Installing tools
 workflow ClientTools_01
@@ -123,6 +119,11 @@ workflow ClientTools_01
                     Invoke-WebRequest "https://aka.ms/azdata-msi" -OutFile "C:\ArcBox\AZDataCLI.msi"
                     Invoke-WebRequest "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/LogonScript.ps1" -OutFile "C:\ArcBox\LogonScript.ps1"
                     Invoke-WebRequest "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/installArcAgent.ps1" -OutFile "C:\ArcBox\agentScript\installArcAgent.ps1"
+                    #liors scripts
+                    Invoke-WebRequest "https://arcinbox.blob.core.windows.net/scripts/LogonScript.ps1" -OutFile "C:\ArcBox\LogonScript.ps1"
+                    Invoke-WebRequest "https://arcinbox.blob.core.windows.net/scripts/installArcAgent.ps1" -OutFile "C:\ArcBox\agentScript\installArcAgent.ps1"
+                    Invoke-WebRequest "https://arcinbox.blob.core.windows.net/scripts/installArcAgentSQL.ps1" -OutFile "C:\ArcBox\agentScript\installArcAgentSQL.ps1"
+                    Invoke-WebRequest "https://arcinbox.blob.core.windows.net/scripts/installArcAgent.sh" -OutFile "C:\ArcBox\agentScript\installArcAgent.sh"
                 }
         }
 
@@ -142,18 +143,59 @@ workflow ClientTools_02
         
 ClientTools_02 | Format-Table 
 
-
-
 # Cloning the Azure Arc Jumpstart git repository
-Write-Output "Clonning the Azure Arc Jumpstart git repository"
+Write-Output "Cloning the Azure Arc Jumpstart git repository"
 git clone https://github.com/microsoft/azure_arc.git "C:\ArcBox\azure_arc"
 
 New-Item -path alias:kubectl -value 'C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes\client\bin\kubectl.exe'
 New-Item -path alias:azdata -value 'C:\Program Files (x86)\Microsoft SDKs\Azdata\CLI\wbin\azdata.cmd'
 
-# Creating PowerShell sql_connectivity Script
-$sql_connectivity = @'
-Start-Transcript "C:\ArcBox\sql_connectivity.log"
+# Creating Data Services Logon Script
+$DataServicesLogonScript = @'
+Start-Transcript -Path C:\ArcBox\DataServicesLogonScript.log
+$azurePassword = ConvertTo-SecureString $env:spnClientSecret -AsPlainText -Force
+$psCred = New-Object System.Management.Automation.PSCredential($env:spnClientID , $azurePassword)
+Connect-AzAccount -Credential $psCred -TenantId $env:spnTenantId -ServicePrincipal
+Import-AzAksCredential -ResourceGroupName $env:resourceGroup -Name $env:clusterName -Force
+kubectl get nodes
+azdata --version
+Write-Host "Installing Azure Data Studio Extensions"
+Write-Host "`n"
+$env:argument1="--install-extension"
+$env:argument2="Microsoft.arc"
+$env:argument3="microsoft.azuredatastudio-postgresql"
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument2
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument3
+Write-Host "Creating Azure Data Studio Desktop shortcut"
+Write-Host "`n"
+$TargetFile = "C:\Program Files\Azure Data Studio\azuredatastudio.exe"
+$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\Azure Data Studio.lnk"
+$WScriptShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
+$Shortcut.TargetPath = $TargetFile
+$Shortcut.Save()
+# Deploying Azure Arc Data Controller
+start PowerShell {for (0 -lt 1) {kubectl get pod -n $env:arcDcName; sleep 5; clear }}
+azdata arc dc config init --source azure-arc-aks-premium-storage --path ./custom
+if(($env:dockerRegistry -ne $NULL) -or ($env:dockerRegistry -ne ""))
+{
+    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.registry=$env:dockerRegistry"
+}
+if(($env:dockerRepository -ne $NULL) -or ($env:dockerRepository -ne ""))
+{
+    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.repository=$env:dockerRepository"
+}
+if(($env:dockerTag -ne $NULL) -or ($env:dockerTag -ne ""))
+{
+    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.imageTag=$env:dockerTag"
+}
+azdata arc dc create --namespace $env:arcDcName --name $env:arcDcName --subscription $env:subscriptionId --resource-group $env:resourceGroup --location $env:azureLocation --connectivity-mode direct --path ./custom
+# Deploying Azure Arc SQL Managed Instance
+azdata login --namespace $env:arcDcName
+azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
+azdata arc sql mi list
+
+# Set up SQL Connectivity and install sample Adventureworks database
 New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -Name "User" -ItemType "directory" -Force
 Start-Transcript "C:\ArcBox\sql_connectivity.log"
 New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -Name "User" -ItemType "directory" -Force
@@ -201,8 +243,8 @@ $s.Split(' ')[-1] | Out-File -FilePath "C:\ArcBox\sql_instance_settings.txt" -En
 Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\ArcBox\settings_template_backup.json" -Recurse -Force -ErrorAction Continue
 $s = Get-Content "C:\ArcBox\sql_instance_settings.txt"
 (Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'arc_sql_mi',$s | Set-Content -Path "C:\ArcBox\settings_template.json"
-(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'sa_username',$env:AZDATA_USERNAME | Set-Content -Path "C:\ArcBox\settings_template.json"
-(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'sa_password',$env:AZDATA_PASSWORD | Set-Content -Path "C:\ArcBox\settings_template.json"
+(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'sa_username',$env:azdataUsername | Set-Content -Path "C:\ArcBox\settings_template.json"
+(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'sa_password',$env:azdataPassword | Set-Content -Path "C:\ArcBox\settings_template.json"
 (Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'false','true' | Set-Content -Path "C:\ArcBox\settings_template.json"
 Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json" -Recurse -Force -ErrorAction Continue
 # Cleaning garbage
@@ -210,60 +252,10 @@ Remove-Item "C:\ArcBox\sql_instance_settings.txt" -Force
 Remove-Item "C:\ArcBox\sql_instance_list.txt" -Force
 Remove-Item "C:\ArcBox\merge.txt" -Force
 # Downloading demo database
-$podname = "$env:MSSQL_MI_NAME" + "-0"
-kubectl exec $podname -n $env:ARC_DC_NAME -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
-kubectl exec $podname -n $env:ARC_DC_NAME -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
-Stop-Transcript
-'@ > C:\ArcBox\sql_connectivity.ps1
+$podname = "$env:mssqlmiName" + "-0"
+kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
+kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:azdataUsername -P $env:azdataPassword -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
 
-# Creating Data Services Logon Script
-$DataServicesLogonScript = @'
-Start-Transcript -Path C:\ArcBox\DataServicesLogonScript.log
-$azurePassword = ConvertTo-SecureString $env:SPN_CLIENT_SECRET -AsPlainText -Force
-$psCred = New-Object System.Management.Automation.PSCredential($env:SPN_CLIENT_ID , $azurePassword)
-Connect-AzAccount -Credential $psCred -TenantId $env:SPN_TENANT_ID -ServicePrincipal
-Import-AzAksCredential -ResourceGroupName $env:resourceGroup -Name $env:clusterName -Force
-kubectl get nodes
-azdata --version
-Write-Host "Installing Azure Data Studio Extensions"
-Write-Host "`n"
-$env:argument1="--install-extension"
-$env:argument2="Microsoft.arc"
-$env:argument3="microsoft.azuredatastudio-postgresql"
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument2
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument3
-Write-Host "Creating Azure Data Studio Desktop shortcut"
-Write-Host "`n"
-$TargetFile = "C:\Program Files\Azure Data Studio\azuredatastudio.exe"
-$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\Azure Data Studio.lnk"
-$WScriptShell = New-Object -ComObject WScript.Shell
-$Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
-$Shortcut.TargetPath = $TargetFile
-$Shortcut.Save()
-# Deploying Azure Arc Data Controller
-start PowerShell {for (0 -lt 1) {kubectl get pod -n $env:ARC_DC_NAME; sleep 5; clear }}
-azdata arc dc config init --source azure-arc-aks-premium-storage --path ./custom
-if(($env:DOCKER_REGISTRY -ne $NULL) -or ($env:DOCKER_REGISTRY -ne ""))
-{
-    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.registry=$env:DOCKER_REGISTRY"
-}
-if(($env:DOCKER_REPOSITORY -ne $NULL) -or ($env:DOCKER_REPOSITORY -ne ""))
-{
-    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.repository=$env:DOCKER_REPOSITORY"
-}
-if(($env:DOCKER_TAG -ne $NULL) -or ($env:DOCKER_TAG -ne ""))
-{
-    azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.imageTag=$env:DOCKER_TAG"
-}
-azdata arc dc create --namespace $env:ARC_DC_NAME --name $env:ARC_DC_NAME --subscription $env:ARC_DC_SUBSCRIPTION --resource-group $env:resourceGroup --location $env:ARC_DC_REGION --connectivity-mode direct --path ./custom
-# Deploying Azure Arc SQL Managed Instance
-azdata login --namespace $env:ARC_DC_NAME
-azdata arc sql mi create --name $env:MSSQL_MI_NAME --storage-class-data managed-premium --storage-class-logs managed-premium
-azdata arc sql mi list
-# Creating MSSQL Instance connectivity details
-Start-Process powershell -ArgumentList "C:\ArcBox\sql_connectivity.ps1" -WindowStyle Hidden -Wait
-Unregister-ScheduledTask -TaskName "LogonScript" -Confirm:$false
-Stop-Transcript
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
 Stop-Process -Name powershell -Force
