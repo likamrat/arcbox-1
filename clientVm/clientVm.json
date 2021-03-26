@@ -28,7 +28,7 @@
             "metadata": {
                 "description": "Windows password for the Virtual Machine"
             }
-        },       
+        },
         "windowsOSVersion": {
             "type": "string",
             "defaultValue": "2019-Datacenter",
@@ -216,7 +216,7 @@
                             "destinationAddressPrefix": "*",
                             "destinationPortRange": "1443"
                         }
-                    }                                                                                                                  
+                    }
                 ]
             }
         },
@@ -263,7 +263,7 @@
             "apiVersion": "2019-03-01",
             "name": "[variables('vmName')]",
             "location": "[parameters('location')]",
-            "tags": "[parameters('resourceTags')]",            
+            "tags": "[parameters('resourceTags')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
             ],
@@ -302,32 +302,32 @@
             }
         },
         {
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat(variables('vmName'),'/Bootstrap')]",
-          "apiVersion": "2019-07-01",
-          "location": "[parameters('location')]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-          ],
-          "tags": {
-              "displayName": "config-choco"
-          },          
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.10",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "fileUris": [
-                "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
-              ],
-              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -clusterName ', parameters('aksClusterName'), ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -registryUsername ', parameters('registryUsername'), ' -registryPassword ', parameters('registryPassword'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -mssqlmiName ', parameters('mssqlmiName'), ' -dockerRegistry ', parameters('dockerRegistry'), ' -dockerRepository ', parameters('dockerRepository'), ' -dockerTag ', parameters('dockerTag'))]" 
-            }            
-          }
-        }                        
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('vmName'),'/Bootstrap')]",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+            ],
+            "tags": {
+                "displayName": "config-choco"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.10",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
+                    ],
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -clusterName ', parameters('aksClusterName'), ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -registryUsername ', parameters('registryUsername'), ' -registryPassword ', parameters('registryPassword'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -mssqlmiName ', parameters('mssqlmiName'), ' -dockerRegistry ', parameters('dockerRegistry'), ' -dockerRepository ', parameters('dockerRepository'), ' -dockerTag ', parameters('dockerTag'))]"
+                }
+            }
+        }
     ],
 
-    
+
     "outputs": {
         "adminUsername": {
             "type": "string",
