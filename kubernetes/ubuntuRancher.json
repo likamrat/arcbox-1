@@ -10,7 +10,7 @@
         },
         "vmName": {
             "type": "string",
-            "defaultValue": "Arc-K3s",
+            "defaultValue": "ArcBoxK3s",
             "metadata": {
                 "description": "The name of you Virtual Machine."
             }

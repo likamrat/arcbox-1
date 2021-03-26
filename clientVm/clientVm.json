@@ -10,7 +10,7 @@
         },
         "vmName": {
             "type": "string",
-            "defaultValue": "ArcBox",
+            "defaultValue": "ArcBoxClient",
             "metadata": {
                 "description": "The name of you Virtual Machine"
             }
