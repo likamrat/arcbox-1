@@ -52,7 +52,7 @@ azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-pr
 azdata arc sql mi list
 
 # Downloading demo database and restoring onto SQL MI
-$podname = "$env:MSSQL_MI_NAME" + "-0"
+$podname = "$env:mssqlMiName" + "-0"
 Start-Sleep -Seconds 300
 Write-Host "Ready to go!"
 kubectl exec $podname -n $env:ARC_DC_NAME -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
