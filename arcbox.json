@@ -152,6 +152,15 @@
           },
           "myIpAddress": {
             "value": "[parameters('myIpAddress')]"
+          },
+          "spnClientId": {
+            "value": "[parameters('spnClientId')]"
+          },
+          "spnClientSecret": {
+            "value": "[parameters('spnClientSecret')]"
+          },
+          "spnTenantId": {
+            "value": "[parameters('spnTenantId')]"
           }
         }
       }

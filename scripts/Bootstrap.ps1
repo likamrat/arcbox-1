@@ -146,8 +146,8 @@ workflow ClientTools_02
 ClientTools_02 | Format-Table 
 
 # Cloning the Azure Arc Jumpstart git repository
-Write-Output "Cloning the Azure Arc Jumpstart git repository"
-git clone https://github.com/microsoft/azure_arc.git "C:\ArcBox\azure_arc"
+# Write-Output "Cloning the Azure Arc Jumpstart git repository"
+# git clone https://github.com/microsoft/azure_arc.git "C:\ArcBox\azure_arc"
 
 New-Item -path alias:kubectl -value 'C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes\client\bin\kubectl.exe'
 New-Item -path alias:azdata -value 'C:\Program Files (x86)\Microsoft SDKs\Azdata\CLI\wbin\azdata.cmd'
