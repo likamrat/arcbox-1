@@ -192,21 +192,21 @@ Write-Output "Copying the Azure Arc onboarding script to the nested VMs"
 (Get-Content -path "$agentScript\ArcAgent1.ps1" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgent2.ps1"
 (Get-Content -path "$agentScript\ArcAgent2.ps1" -Raw) -replace '\$resourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgent3.ps1"
 (Get-Content -path "$agentScript\ArcAgent3.ps1" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgent4.ps1"
-(Get-Content -path "$agentScript\ArcAgent4.ps1" -Raw) -replace '\$Azurelocation',"'$env:Azurelocation'" | Set-Content -Path "$agentScript\ArcAgent5.ps1"
+(Get-Content -path "$agentScript\ArcAgent4.ps1" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgent5.ps1"
 (Get-Content -path "$agentScript\ArcAgent5.ps1" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.ps1"
 
 (Get-Content -path "$agentScript\installArcAgentSQL.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgentSQL1.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL1.ps1" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgentSQL2.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL2.ps1" -Raw) -replace '\$myResourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgentSQL3.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL3.ps1" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgentSQL4.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL4.ps1" -Raw) -replace '\$Azurelocation',"'$env:Azurelocation'" | Set-Content -Path "$agentScript\ArcAgentSQL5.ps1"
+(Get-Content -path "$agentScript\ArcAgentSQL4.ps1" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgentSQL5.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL5.ps1" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentSQLModified.ps1"
 
 (Get-Content -path "$agentScript\installArcAgent.sh" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgent1.sh"
 (Get-Content -path "$agentScript\ArcAgent1.sh" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgent2.sh"
 (Get-Content -path "$agentScript\ArcAgent2.sh" -Raw) -replace '\$resourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgent3.sh"
 (Get-Content -path "$agentScript\ArcAgent3.sh" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgent4.sh"
-(Get-Content -path "$agentScript\ArcAgent4.sh" -Raw) -replace '\$Azurelocation',"'$env:Azurelocation'" | Set-Content -Path "$agentScript\ArcAgent5.sh"
+(Get-Content -path "$agentScript\ArcAgent4.sh" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgent5.sh"
 (Get-Content -path "$agentScript\ArcAgent5.sh" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.sh"
 
 Copy-VMFile "ArcBoxWin" -SourcePath "$agentScript\installArcAgentModified.ps1" -DestinationPath C:\Temp\installArcAgent.ps1 -CreateFullPath -FileSource Host
@@ -214,7 +214,7 @@ Copy-VMFile "ArcBoxSQL" -SourcePath "$agentScript\installArcAgentSQLModified.ps1
 echo y | pscp -P 22 -pw $nestedLinuxPassword "$agentScript\installArcAgentModified.sh" $nestedLinuxUsername@"$vmIp":/home/"$nestedLinuxUsername"
 
 # Onboarding the nested VMs as Azure Arc enabled servers
-Write-Output "Onboarding the nested Windows VMs as an Azure Arc enabled servers"
+Write-Output "Onboarding the nested Windows VMs as Azure Arc enabled servers"
 $secstr = New-Object -TypeName System.Security.SecureString
 $nestedWindowsPassword.ToCharArray() | ForEach-Object {$secstr.AppendChar($_)}
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $nestedWindowsUsername, $secstr
@@ -222,7 +222,7 @@ $cred = new-object -typename System.Management.Automation.PSCredential -argument
 Invoke-Command -VMName ArcBoxWin -ScriptBlock { powershell -File C:\Temp\installArcAgent.ps1 } -Credential $cred
 Invoke-Command -VMName ArcBoxSQL -ScriptBlock { powershell -File C:\Temp\installArcAgentSQL.ps1 } -Credential $cred
 
-Write-Output "Onboarding the nested Linux VM as an Azure Arc enabled servers"
+Write-Output "Onboarding the nested Linux VM as an Azure Arc enabled server"
 $secpasswd = ConvertTo-SecureString $nestedLinuxPassword -AsPlainText -Force
 $Credentials = New-Object System.Management.Automation.PSCredential($nestedLinuxUsername, $secpasswd)
 $SessionID = New-SSHSession -ComputerName $vmIp -Credential $Credentials -Force #Connect Over SSH
@@ -239,4 +239,4 @@ Copy-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administra
 Start-Process -FilePath "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Hyper-V Manager.lnk" -WindowStyle Maximized
 
 # Removing the LogonScript Scheduled Task so it won't run on next reboot
-Unregister-ScheduledTask -TaskName "LogonScript" -Confirm:$false
+Unregister-ScheduledTask -TaskName "ArcServersLogonScript" -Confirm:$false
