@@ -26,7 +26,7 @@
         },
         "clusterName": {
             "type": "string",
-            "defaultValue": "arcBoxCluster"
+            "defaultValue": "ArcBoxCluster"
         },
         "kubernetesVersion": {
             "defaultValue": "1.18.10",
