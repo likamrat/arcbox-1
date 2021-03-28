@@ -63,7 +63,7 @@
             "metadata": {
                 "description": "boolean flag to turn on and off of RBAC"
             }
-        },        
+        },
         "osType": {
             "type": "string",
             "defaultValue": "Linux",
@@ -91,41 +91,41 @@
         }
     },
     "resources": [
-    {
-        "apiVersion": "2020-03-01",
-        "type": "Microsoft.ContainerService/managedClusters",
-        "location": "[parameters('azureLocation')]",
-        "name": "[parameters('clusterName')]",
-        "tags": "[parameters('resourceTags')]",
-        "properties": {
-            "kubernetesVersion": "[parameters('kubernetesVersion')]",
-            "enableRBAC": "[parameters('enableRBAC')]",                
-            "dnsPrefix": "[parameters('aksDnsPrefix')]",
-            "agentPoolProfiles": [
-                {
-                    "name": "agentpool",
-                    "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
-                    "count": "[parameters('agentCount')]",
-                    "vmSize": "[parameters('agentVMSize')]",
-                    "osType": "[parameters('osType')]",
-                    "storageProfile": "ManagedDisks"
+        {
+            "apiVersion": "2020-03-01",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "location": "[parameters('azureLocation')]",
+            "name": "[parameters('clusterName')]",
+            "tags": "[parameters('resourceTags')]",
+            "properties": {
+                "kubernetesVersion": "[parameters('kubernetesVersion')]",
+                "enableRBAC": "[parameters('enableRBAC')]",
+                "dnsPrefix": "[parameters('aksDnsPrefix')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
+                        "count": "[parameters('agentCount')]",
+                        "vmSize": "[parameters('agentVMSize')]",
+                        "osType": "[parameters('osType')]",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "[parameters('nodeAdminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshRSAPublicKey')]"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('spnClientId')]",
+                    "Secret": "[parameters('spnClientSecret')]"
                 }
-            ],
-            "linuxProfile": {
-                "adminUsername": "[parameters('nodeAdminUsername')]",
-                "ssh": {
-                    "publicKeys": [
-                        {
-                            "keyData": "[parameters('sshRSAPublicKey')]"
-                        }
-                    ]
-                }
-            },
-            "servicePrincipalProfile": {
-                "clientId": "[parameters('spnClientId')]",
-                "Secret": "[parameters('spnClientSecret')]"
             }
         }
-    }
     ]
-  }
+}
