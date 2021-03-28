@@ -141,6 +141,34 @@
         "dockerTag": {
             "type": "string",
             "defaultValue": "latest"
+        },
+        "postgresName": {
+            "type": "string",
+            "defaultValue": "arcpg",
+            "metadata": {
+                "description": "Name of PostgreSQL server group"
+            }
+        },
+        "postgresWorkerNodeCount": {
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "Number of PostgreSQL Hyperscale worker nodes"
+            }
+        },
+        "postgresDatasize": {
+            "type": "int",
+            "defaultValue": 1024,
+            "metadata": {
+                "description": "Size of data volumes in MB"
+            }
+        },
+        "postgresServiceType": {
+            "type": "string",
+            "defaultValue": "LoadBalancer",
+            "metadata": {
+                "description": "Choose how PostgreSQL service is accessed through Kubernetes networking interface"
+            }
         }
     },
     "variables": {
@@ -321,7 +349,7 @@
                     "fileUris": [
                         "[uri(variables('templateBaseUrl'), 'scripts/Bootstrap.ps1')]"
                     ],
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -clusterName ', parameters('aksClusterName'), ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -registryUsername ', parameters('registryUsername'), ' -registryPassword ', parameters('registryPassword'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -mssqlmiName ', parameters('mssqlmiName'), ' -dockerRegistry ', parameters('dockerRegistry'), ' -dockerRepository ', parameters('dockerRepository'), ' -dockerTag ', parameters('dockerTag'))]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -clusterName ', parameters('aksClusterName'), ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -registryUsername ', parameters('registryUsername'), ' -registryPassword ', parameters('registryPassword'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -mssqlmiName ', parameters('mssqlmiName'), ' -dockerRegistry ', parameters('dockerRegistry'), ' -dockerRepository ', parameters('dockerRepository'), ' -dockerTag ', parameters('dockerTag'), ' -POSTGRES_NAME ', parameters('postgresName'), ' -POSTGRES_WORKER_NODE_COUNT ', parameters('postgresWorkerNodeCount'), ' -POSTGRES_DATASIZE ', parameters('postgresDatasize'), ' -POSTGRES_SERVICE_TYPE ', parameters('postgresServiceType')) ]"
                 }
             }
         }

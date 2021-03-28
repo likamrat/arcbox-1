@@ -17,7 +17,11 @@ param (
     [string]$mssqlmiName,
     [string]$dockerRegistry,
     [string]$dockerRepository,
-    [string]$dockerTag
+    [string]$dockerTag,
+    [string]$POSTGRES_NAME,   
+    [string]$POSTGRES_WORKER_NODE_COUNT,
+    [string]$POSTGRES_DATASIZE,
+    [string]$POSTGRES_SERVICE_TYPE
 )
 
 [System.Environment]::SetEnvironmentVariable('adminUsername', $adminUsername,[System.EnvironmentVariableTarget]::Machine)
@@ -43,6 +47,10 @@ param (
 [System.Environment]::SetEnvironmentVariable('dockerRegistry', $dockerRegistry,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('dockerRepository', $dockerRepository,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('dockerTag', $dockerTag,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('POSTGRES_NAME', $POSTGRES_NAME,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('POSTGRES_WORKER_NODE_COUNT', $POSTGRES_WORKER_NODE_COUNT,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('POSTGRES_DATASIZE', $POSTGRES_DATASIZE,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('POSTGRES_SERVICE_TYPE', $POSTGRES_SERVICE_TYPE,[System.EnvironmentVariableTarget]::Machine)
 
 # Create path
 Write-Output "Create ArcBox path"
