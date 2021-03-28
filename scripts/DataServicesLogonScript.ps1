@@ -84,6 +84,11 @@ Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:a
 Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
 Remove-Item "C:\ArcBox\merge.txt" -Force
 Remove-Item "C:\ArcBox\out.txt" -Force
+# Restoring demo database
+$podname = "$env:POSTGRES_NAME" + "c-0"
+kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql"
+kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
+kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
 
 # Deploying Azure Arc SQL Managed Instance
 # azdata login --namespace $env:arcDcName
