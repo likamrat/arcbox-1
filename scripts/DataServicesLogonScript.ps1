@@ -62,7 +62,7 @@ $s.Split('@')[-1] | Out-File "C:\ArcBox\out.txt"
 $s = Get-Content "C:\ArcBox\out.txt"
 $s.Substring(0, $s.IndexOf(':')) | Out-File -FilePath "C:\ArcBox\merge.txt" -Encoding ascii -NoNewline
 # Retreving PostgreSQL Server Name
-Add-Content -Path "C:\ArcBox\merge.txt" -Value ("   ","postgres") -Encoding ascii -NoNewline
+Add-Content -Path "C:\ArcBox\merge.txt" -Value ("   ",$env:POSTGRES_NAME) -Encoding ascii -NoNewline
 # Adding PostgreSQL Server Name & IP to Hosts file
 Copy-Item -Path "C:\Windows\System32\drivers\etc\hosts" -Destination "C:\ArcBox\hosts_backup" -Recurse -Force -ErrorAction Continue
 $s = Get-Content "C:\ArcBox\merge.txt"
@@ -86,9 +86,9 @@ Remove-Item "C:\ArcBox\merge.txt" -Force
 Remove-Item "C:\ArcBox\out.txt" -Force
 # Restoring demo database
 $podname = "$env:POSTGRES_NAME" + "c-0"
-kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql"
-kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
-kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
+kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql"
+kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
+kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
 
 # Deploying Azure Arc SQL Managed Instance
 # azdata login --namespace $env:arcDcName
@@ -100,9 +100,9 @@ kubectl exec $podname -n $env:ARC_DC_NAME -c postgres -- sudo -u postgres psql -
 # $podname = "$env:mssqlMiName" + "-0"
 # Start-Sleep -Seconds 300
 # Write-Host "Ready to go!"
-# kubectl exec $podname -n $env:ARC_DC_NAME -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
+# kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
 # Start-Sleep -Seconds 5
-# kubectl exec $podname -n $env:ARC_DC_NAME -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
+# kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
 
 # Write-Host ""
 # Write-Host "Creating Azure Data Studio settings for SQL Managed Instance connection"
