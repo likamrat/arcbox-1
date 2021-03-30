@@ -10,7 +10,7 @@
         },
         "vmName": {
             "type": "string",
-            "defaultValue": "ArcBoxClient",
+            "defaultValue": "ArcBox-Client",
             "metadata": {
                 "description": "The name of you Virtual Machine"
             }
@@ -52,7 +52,7 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "ArcBox-VNET",
+            "defaultValue": "ArcBox-Vnet",
             "metadata": {
                 "description": "Name of the VNET"
             }

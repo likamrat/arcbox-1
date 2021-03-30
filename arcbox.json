@@ -52,7 +52,7 @@
     },
     "aksClusterName": {
       "type": "string",
-      "defaultValue": "ArcboxAksCluster",
+      "defaultValue": "Arcbox-AksCluster",
       "metadata": {
         "description": "Name for your AKS cluster"
       }

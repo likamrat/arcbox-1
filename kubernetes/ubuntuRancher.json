@@ -10,7 +10,7 @@
         },
         "vmName": {
             "type": "string",
-            "defaultValue": "ArcBoxK3s",
+            "defaultValue": "ArcBox-K3s",
             "metadata": {
                 "description": "The name of you Virtual Machine."
             }
@@ -68,7 +68,7 @@
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "ArcK3s-NSG",
+            "defaultValue": "ArcBox-K3s-NSG",
             "metadata": {
                 "description": "Name of the Network Security Group"
             }
