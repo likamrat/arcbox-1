@@ -82,51 +82,52 @@ Workflow DatabaseDeploy
 
 DatabaseDeploy | Format-Table
 
-# Now edit hosts file and Azure Data Studio settings.json
-# Retreving PostgreSQL Server IP
+# Retreving PostgreSQL Server IP and store as merge.txt
+Write-Host ""
+Write-Host "Adding PostgreSQL Server Name & IP to Hosts file"
 azdata arc postgres endpoint list --name $env:POSTGRES_NAME | Tee-Object "C:\ArcBox\postgres_instance_endpoint.txt"
 Get-Content "C:\ArcBox\postgres_instance_endpoint.txt" | Where-Object {$_ -match '@'} | Set-Content "C:\ArcBox\out.txt"
 $s = Get-Content "C:\ArcBox\out.txt" 
 $s.Split('@')[-1] | Out-File "C:\ArcBox\out.txt"
 $s = Get-Content "C:\ArcBox\out.txt"
 $s.Substring(0, $s.IndexOf(':')) | Out-File -FilePath "C:\ArcBox\merge.txt" -Encoding ascii -NoNewline
-# Retreving PostgreSQL Server Name
+# Retreving PostgreSQL Server Name and append to merge.txt
 Add-Content -Path "C:\ArcBox\merge.txt" -Value ("   ",$env:POSTGRES_NAME) -Encoding ascii -NoNewline
 # Adding PostgreSQL Server Name & IP to Hosts file
 Copy-Item -Path "C:\Windows\System32\drivers\etc\hosts" -Destination "C:\ArcBox\hosts_backup" -Recurse -Force -ErrorAction Continue
 $s = Get-Content "C:\ArcBox\merge.txt"
 Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value $s -Encoding ascii
-# Creating Azure Data Studio settings for PostgreSQL connection
-azdata arc postgres endpoint list --name $env:POSTGRES_NAME | Tee-Object "C:\ArcBox\postgres_instance_endpoint.txt"
-Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\ArcBox\settings_template_backup.json" -Recurse -Force -ErrorAction Continue
-Get-Content "C:\ArcBox\postgres_instance_endpoint.txt" | Where-Object {$_ -match '@'} | Set-Content "C:\ArcBox\out.txt"
-$s = Get-Content "C:\ArcBox\out.txt" 
-$s.Split('@')[-1] | Out-File "C:\ArcBox\out.txt"
-$s = Get-Content "C:\ArcBox\out.txt"
-$s.Substring(0, $s.IndexOf(':')) | Out-File -FilePath "C:\ArcBox\merge.txt" -Encoding ascii -NoNewline
-$s = (Get-Content "C:\ArcBox\merge.txt").Trim()
-(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'arc_postgres',$s | Set-Content -Path "C:\ArcBox\settings_template.json"
-(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'ps_password',$env:AZDATA_PASSWORD | Set-Content -Path "C:\ArcBox\settings_template.json"
-(Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'false','true' | Set-Content -Path "C:\ArcBox\settings_template.json"
-Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json" -Recurse -Force -ErrorAction Continue
 
+# Creating Azure Data Studio settings for database connections
 Write-Host ""
-Write-Host "Creating Azure Data Studio settings for SQL Managed Instance connection"
+Write-Host "Creating Azure Data Studio settings for database connections"
+New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -Name "User" -ItemType "directory" -Force
 Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
 $settingsFile = "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
 azdata arc sql mi list | Tee-Object "C:\ArcBox\sql_instance_list.txt"
-$file = "C:\ArcBox\sql_instance_list.txt"
-(Get-Content $file | Select-Object -Skip 2) | Set-Content $file
-$string = Get-Content $file
-$string.Substring(0, $string.IndexOf(',')) | Set-Content $file
-$sql = Get-Content $file
+azdata arc postgres endpoint list --name $env:POSTGRES_NAME | Tee-Object "C:\ArcBox\postgres_instance_endpoint.txt"
+$sqlfile = "C:\ArcBox\sql_instance_list.txt"
+$postgresfile = "C:\ArcBox\postgres_instance_endpoint.txt"
+
+(Get-Content $sqlfile | Select-Object -Skip 2) | Set-Content $sqlfile
+$sqlstring = Get-Content $sqlfile
+$sqlstring.Substring(0, $sqlstring.IndexOf(',')) | Set-Content $sqlfile
+$sql = Get-Content $sqlfile
+
+(Get-Content $postgresfile | Select-Object -Skip 2) | Set-Content $postgresfile
+$pgstring = Get-Content $postgresfile
+$pgstring.Substring(0, $pgstring.IndexOf(',')) | Set-Content $postgresfile
+$pg = Get-Content $postgresfile
 
 (Get-Content -Path $settingsFile) -replace 'arc_sql_mi',$sql | Set-Content -Path $settingsFile
 (Get-Content -Path $settingsFile) -replace 'sa_username',$env:AZDATA_USERNAME | Set-Content -Path $settingsFile
 (Get-Content -Path $settingsFile) -replace 'sa_password',$env:AZDATA_PASSWORD | Set-Content -Path $settingsFile
 (Get-Content -Path $settingsFile) -replace 'false','true' | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'arc_postgres',$pg | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'ps_password',$env:AZDATA_PASSWORD | Set-Content -Path $settingsFile
 
 # Cleaning garbage
+Remove-Item "C:\ArcBox\sql_instance_list.txt" -Force
 Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
 Remove-Item "C:\ArcBox\merge.txt" -Force
 Remove-Item "C:\ArcBox\out.txt" -Force
