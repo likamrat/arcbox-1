@@ -28,6 +28,8 @@ $Shortcut.TargetPath = $TargetFile
 $Shortcut.Save()
 
 # Deploying Azure Arc Data Controller
+Write-Host "Deploying Azure Arc Data Controller (opening another terminal window to monitor pod deployment)"
+Write-Host "`n"
 start PowerShell {for (0 -lt 1) {kubectl get pod -n $env:arcDcName; sleep 5; clear }}
 azdata arc dc config init --source azure-arc-aks-premium-storage --path ./custom
 if(($env:dockerRegistry -ne $NULL) -or ($env:dockerRegistry -ne ""))
@@ -46,6 +48,8 @@ if(($env:dockerTag -ne $NULL) -or ($env:dockerTag -ne ""))
 azdata arc dc create --namespace $env:arcDcName --name $env:arcDcName --subscription $env:subscriptionId --resource-group $env:resourceGroup --location $env:azureLocation --connectivity-mode direct --path ./custom
 Start-Sleep -s 30
 
+Write-Host "Deploying SQL MI and Postgres data services"
+Write-Host "`n"
 New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -Name "User" -ItemType "directory" -Force
 
 Workflow DatabaseDeploy
@@ -58,9 +62,9 @@ Workflow DatabaseDeploy
             azdata arc postgres endpoint list --name $env:POSTGRES_NAME
 
             $podname = "$env:POSTGRES_NAME" + "c-0"
-            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2> $null
-            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2> $null
-            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql 2> $null
+            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2> Out-Null
+            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2> Out-Null
+            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql 2> Out-Null
         }
         InlineScript {
             # Deploying Azure Arc SQL Managed Instance
@@ -72,10 +76,9 @@ Workflow DatabaseDeploy
             # Downloading demo database and restoring onto SQL MI
             $podname = "$env:mssqlMiName" + "-0"
             Start-Sleep -Seconds 300
-            Write-Host "Ready to go!"
-            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak 2> $null
+            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak 2> Out-Null
             Start-Sleep -Seconds 5
-            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" 2> $null
+            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" 2> Out-Null
         }
     }
 }
