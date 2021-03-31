@@ -51,7 +51,7 @@ New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -N
 Workflow DatabaseDeploy
 {
     Parallel {
-        $PostgresDeploy = InlineScript {
+        InlineScript {
             # Deploying Azure Arc PostgreSQL Hyperscale Server Group
             azdata login --namespace $env:arcDcName
             azdata arc postgres server create --name $env:POSTGRES_NAME --workers $env:POSTGRES_WORKER_NODE_COUNT --storage-class-data managed-premium --storage-class-logs managed-premium
@@ -62,7 +62,7 @@ Workflow DatabaseDeploy
             kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
             kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
         }
-        $SqlMiDeploy = InlineScript {
+        InlineScript {
             # Deploying Azure Arc SQL Managed Instance
             azdata login --namespace $env:arcDcName
             azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
