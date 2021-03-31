@@ -48,12 +48,41 @@ Start-Sleep -s 30
 
 New-Item -Path "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\" -Name "User" -ItemType "directory" -Force
 
-# Deploying Azure Arc PostgreSQL Hyperscale Server Group
-azdata login --namespace $env:arcDcName
-azdata arc postgres server create --name $env:POSTGRES_NAME --workers $env:POSTGRES_WORKER_NODE_COUNT --storage-class-data managed-premium --storage-class-logs managed-premium
-azdata arc postgres endpoint list --name $env:POSTGRES_NAME
+Workflow DatabaseDeploy
+{
+    Parallel {
+        $PostgresDeploy = InlineScript {
+            # Deploying Azure Arc PostgreSQL Hyperscale Server Group
+            azdata login --namespace $env:arcDcName
+            azdata arc postgres server create --name $env:POSTGRES_NAME --workers $env:POSTGRES_WORKER_NODE_COUNT --storage-class-data managed-premium --storage-class-logs managed-premium
+            azdata arc postgres endpoint list --name $env:POSTGRES_NAME
 
+            $podname = "$env:POSTGRES_NAME" + "c-0"
+            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql"
+            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
+            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
+        }
+        $SqlMiDeploy = InlineScript {
+            # Deploying Azure Arc SQL Managed Instance
+            azdata login --namespace $env:arcDcName
+            azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
 
+            azdata arc sql mi list
+
+            # Downloading demo database and restoring onto SQL MI
+            $podname = "$env:mssqlMiName" + "-0"
+            Start-Sleep -Seconds 300
+            Write-Host "Ready to go!"
+            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
+            Start-Sleep -Seconds 5
+            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
+        }
+    }
+}
+
+DatabaseDeploy | Format-Table
+
+# Now edit hosts file and Azure Data Studio settings.json
 # Retreving PostgreSQL Server IP
 azdata arc postgres endpoint list --name $env:POSTGRES_NAME | Tee-Object "C:\ArcBox\postgres_instance_endpoint.txt"
 Get-Content "C:\ArcBox\postgres_instance_endpoint.txt" | Where-Object {$_ -match '@'} | Set-Content "C:\ArcBox\out.txt"
@@ -80,45 +109,27 @@ $s = (Get-Content "C:\ArcBox\merge.txt").Trim()
 (Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'ps_password',$env:AZDATA_PASSWORD | Set-Content -Path "C:\ArcBox\settings_template.json"
 (Get-Content -Path "C:\ArcBox\settings_template.json" -Raw) -replace 'false','true' | Set-Content -Path "C:\ArcBox\settings_template.json"
 Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json" -Recurse -Force -ErrorAction Continue
+
+Write-Host ""
+Write-Host "Creating Azure Data Studio settings for SQL Managed Instance connection"
+Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
+$settingsFile = "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
+azdata arc sql mi list | Tee-Object "C:\ArcBox\sql_instance_list.txt"
+$file = "C:\ArcBox\sql_instance_list.txt"
+(Get-Content $file | Select-Object -Skip 2) | Set-Content $file
+$string = Get-Content $file
+$string.Substring(0, $string.IndexOf(',')) | Set-Content $file
+$sql = Get-Content $file
+
+(Get-Content -Path $settingsFile) -replace 'arc_sql_mi',$sql | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'sa_username',$env:AZDATA_USERNAME | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'sa_password',$env:AZDATA_PASSWORD | Set-Content -Path $settingsFile
+(Get-Content -Path $settingsFile) -replace 'false','true' | Set-Content -Path $settingsFile
+
 # Cleaning garbage
 Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
 Remove-Item "C:\ArcBox\merge.txt" -Force
 Remove-Item "C:\ArcBox\out.txt" -Force
-# Restoring demo database
-$podname = "$env:POSTGRES_NAME" + "c-0"
-kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql"
-kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres
-kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql
-
-# Deploying Azure Arc SQL Managed Instance
-# azdata login --namespace $env:arcDcName
-# azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
-
-# azdata arc sql mi list
-
-# Downloading demo database and restoring onto SQL MI
-# $podname = "$env:mssqlMiName" + "-0"
-# Start-Sleep -Seconds 300
-# Write-Host "Ready to go!"
-# kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak
-# Start-Sleep -Seconds 5
-# kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'"
-
-# Write-Host ""
-# Write-Host "Creating Azure Data Studio settings for SQL Managed Instance connection"
-# Copy-Item -Path "C:\ArcBox\settings_template.json" -Destination "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
-# $settingsFile = "C:\Users\$env:adminUsername\AppData\Roaming\azuredatastudio\User\settings.json"
-# azdata arc sql mi list | Tee-Object "C:\ArcBox\sql_instance_list.txt"
-# $file = "C:\ArcBox\sql_instance_list.txt"
-# (Get-Content $file | Select-Object -Skip 2) | Set-Content $file
-# $string = Get-Content $file
-# $string.Substring(0, $string.IndexOf(',')) | Set-Content $file
-# $sql = Get-Content $file
-
-# (Get-Content -Path $settingsFile) -replace 'arc_sql_mi',$sql | Set-Content -Path $settingsFile
-# (Get-Content -Path $settingsFile) -replace 'sa_username',$env:AZDATA_USERNAME | Set-Content -Path $settingsFile
-# (Get-Content -Path $settingsFile) -replace 'sa_password',$env:AZDATA_PASSWORD | Set-Content -Path $settingsFile
-# (Get-Content -Path $settingsFile) -replace 'false','true' | Set-Content -Path $settingsFile
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
