@@ -1,4 +1,4 @@
-Start-Transcript "C:\ArcBox\LogonScript.log"
+Start-Transcript "C:\ArcBox\ArcServersLogonScript.log"
 
 $ArcBoxDir = "C:\ArcBox"
 $vmDir = "C:\ArcBox\Virtual Machines"

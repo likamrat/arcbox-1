@@ -5,6 +5,8 @@ $psCred = New-Object System.Management.Automation.PSCredential($env:spnClientID 
 Connect-AzAccount -Credential $psCred -TenantId $env:spnTenantId -ServicePrincipal
 Import-AzAksCredential -ResourceGroupName $env:resourceGroup -Name $env:clusterName -Force
 
+Write-Host "Checking kubernetes nodes"
+Write-Host "`n"
 kubectl get nodes
 azdata --version
 
