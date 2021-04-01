@@ -344,10 +344,9 @@
                 "typeHandlerVersion": "2.1",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "timestamp": 123456789
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('bash install_k3s.sh', ' ', parameters('adminUsername'), ' ', parameters('sshRSAPublicKey'), ' ', parameters('spnClientId'), ' ', parameters('spnClientSecret'), ' ', parameters('spnTenantId'), ' ', parameters('vmName'))]",
+                    "commandToExecute": "[concat('bash install_k3s.sh', ' ', parameters('adminUsername'), ' ', parameters('spnClientId'), ' ', parameters('spnClientSecret'), ' ', parameters('spnTenantId'), ' ', parameters('spnTenantId'), ' ', parameters('vmName'), ' ', parameters('azureLocation'))]",
                     "fileUris": [ "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/install_k3s.sh" ]
                 }
             }
