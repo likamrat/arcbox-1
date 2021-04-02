@@ -28,7 +28,7 @@ chmod +x vars.sh
 
 publicIp=$(curl icanhazip.com)
 
-# Installing Rancer K3s single master cluster using k3sup
+# Installing Rancher K3s single master cluster using k3sup
 sudo -u $adminUsername mkdir /home/${adminUsername}/.kube
 curl -sLS https://get.k3sup.dev | sh
 sudo cp k3sup /usr/local/bin/k3sup
