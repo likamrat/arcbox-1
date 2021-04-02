@@ -64,7 +64,7 @@ Workflow DatabaseDeploy
             azdata arc postgres endpoint list --name $env:POSTGRES_NAME
 
             $podname = "$env:POSTGRES_NAME" + "c-0"
-            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -Ohttps://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2>&1 $null
+            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -O https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2>&1 $null
             kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2>&1 $null
             kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql 2>&1 $null
         }
@@ -72,7 +72,6 @@ Workflow DatabaseDeploy
             # Deploying Azure Arc SQL Managed Instance
             azdata login --namespace $env:arcDcName
             azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
-
             azdata arc sql mi list
 
             # Downloading demo database and restoring onto SQL MI
