@@ -118,9 +118,9 @@ $sqlstring = Get-Content $sqlfile
 $sqlstring.Substring(0, $sqlstring.IndexOf(',')) | Set-Content $sqlfile
 $sql = Get-Content $sqlfile
 
-(Get-Content $postgresfile | Select-Object -Skip 2) | Set-Content $postgresfile
+(Get-Content $postgresfile | Select-Object -Index 8) | Set-Content $postgresfile
 $pgstring = Get-Content $postgresfile
-$pgstring.Substring(0, $pgstring.IndexOf(',')) | Set-Content $postgresfile
+$pgstring.Substring($pgstring.IndexOf('@')+1, $pgstring.LastIndexOf(':')-$pgstring.IndexOf('@')-1) | Set-Content $postgresfile
 $pg = Get-Content $postgresfile
 
 (Get-Content -Path $settingsFile) -replace 'arc_sql_mi',$sql | Set-Content -Path $settingsFile
