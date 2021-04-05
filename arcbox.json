@@ -38,6 +38,13 @@
         "description": "DNS prefix used for your AKS cluster"
       }
     },
+    "aksClusterName": {
+      "type": "string",
+      "defaultValue": "ArcBox-Data",
+      "metadata": {
+        "description": "Name for the AKS cluster"
+      }
+    }
     "windowsAdminUsername": {
       "type": "string",
       "metadata": {
@@ -96,6 +103,9 @@
           },
           "azureLocation": {
             "value": "[resourceGroup().location]"
+          },
+          "aksClusterName": {
+            "value": "[parameters('aksClusterName')]"
           },
           "resourceTags": {
             "value": {
