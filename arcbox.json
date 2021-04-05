@@ -95,7 +95,7 @@
             "value": "[parameters('spnClientSecret')]"
           },
           "azureLocation": {
-            "value": "[resourceGroup()]"
+            "value": "[resourceGroup().location]"
           },
           "resourceTags": {
             "value": {
