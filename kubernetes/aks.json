@@ -4,7 +4,6 @@
     "parameters": {
         "azureLocation": {
             "type": "string",
-            "defaultValue": "eastus",
             "metadata": {
                 "description": "Location for all resources"
             }
@@ -25,10 +24,11 @@
             "type": "string"
         },
         "clusterName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "ArcBox-Data"
         },
         "kubernetesVersion": {
-            "defaultValue": "1.18.10",
+            "defaultValue": "1.18.14",
             "type": "string",
             "metadata": {
                 "description": "The version of Kubernetes"

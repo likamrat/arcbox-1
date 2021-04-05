@@ -50,13 +50,6 @@
         "description": "Password for Windows account"
       }
     },
-    "aksClusterName": {
-      "type": "string",
-      "defaultValue": "Arcbox-AksCluster",
-      "metadata": {
-        "description": "Name for your AKS cluster"
-      }
-    },
     "workspaceName": {
       "type": "string",
       "metadata": {
@@ -102,36 +95,12 @@
             "value": "[parameters('spnClientSecret')]"
           },
           "azureLocation": {
-            "value": "eastus"
+            "value": "[resourceGroup()]"
           },
           "resourceTags": {
             "value": {
               "Project": "jumpstart_arcbox"
             }
-          },
-          "clusterName": {
-            "value": "[parameters('aksClusterName')]"
-          },
-          "kubernetesVersion": {
-            "value": "1.18.10"
-          },
-          "agentCount": {
-            "value": 3
-          },
-          "agentVMSize": {
-            "value": "Standard_D8s_v3"
-          },
-          "nodeAdminUsername": {
-            "value": "arcdemo"
-          },
-          "enableRBAC": {
-            "value": true
-          },
-          "osType": {
-            "value": "Linux"
-          },
-          "osDiskSizeGB": {
-            "value": 0
           }
         }
       }

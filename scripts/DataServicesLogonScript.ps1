@@ -138,8 +138,6 @@ $pg = Get-Content $postgresfile
 # Cleaning garbage
 Remove-Item "C:\ArcBox\sql_instance_list.txt" -Force
 Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
-Remove-Item "C:\ArcBox\merge.txt" -Force
-Remove-Item "C:\ArcBox\out.txt" -Force
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
