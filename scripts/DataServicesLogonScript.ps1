@@ -62,6 +62,7 @@ Workflow DatabaseDeploy
             azdata login --namespace $env:arcDcName
             azdata arc postgres server create --name $env:POSTGRES_NAME --workers $env:POSTGRES_WORKER_NODE_COUNT --storage-class-data managed-premium --storage-class-logs managed-premium
             azdata arc postgres endpoint list --name $env:POSTGRES_NAME
+            Start-Sleep -Seconds 300
             # Downloading demo database and restoring onto Postgres
             $podname = "$env:POSTGRES_NAME" + "c-0"
             Write-Host "Downloading AdventureWorks.sql template for Postgres... (1/3)"
