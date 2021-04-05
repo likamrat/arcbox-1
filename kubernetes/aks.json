@@ -23,7 +23,7 @@
         "spnClientSecret": {
             "type": "string"
         },
-        "clusterName": {
+        "aksClusterName": {
             "type": "string",
             "defaultValue": "ArcBox-Data"
         },
@@ -95,7 +95,7 @@
             "apiVersion": "2020-03-01",
             "type": "Microsoft.ContainerService/managedClusters",
             "location": "[parameters('azureLocation')]",
-            "name": "[parameters('clusterName')]",
+            "name": "[parameters('aksClusterName')]",
             "tags": "[parameters('resourceTags')]",
             "properties": {
                 "kubernetesVersion": "[parameters('kubernetesVersion')]",
