@@ -91,22 +91,6 @@ Workflow DatabaseDeploy
 
 DatabaseDeploy | Format-Table
 
-# Retreving PostgreSQL Server IP and store as merge.txt
-# Write-Host ""
-# Write-Host "Adding PostgreSQL Server Name & IP to Hosts file"
-# azdata arc postgres endpoint list --name $env:POSTGRES_NAME | Tee-Object "C:\ArcBox\postgres_instance_endpoint.txt"
-# Get-Content "C:\ArcBox\postgres_instance_endpoint.txt" | Where-Object {$_ -match '@'} | Set-Content "C:\ArcBox\out.txt"
-# $s = Get-Content "C:\ArcBox\out.txt" 
-# $s.Split('@')[-1] | Out-File "C:\ArcBox\out.txt"
-# $s = Get-Content "C:\ArcBox\out.txt"
-# $s.Substring(0, $s.IndexOf(':')) | Out-File -FilePath "C:\ArcBox\merge.txt" -Encoding ascii -NoNewline
-# # Retreving PostgreSQL Server Name and append to merge.txt
-# Add-Content -Path "C:\ArcBox\merge.txt" -Value ("   ",$env:POSTGRES_NAME) -Encoding ascii -NoNewline
-# # Adding PostgreSQL Server Name & IP to Hosts file
-# Copy-Item -Path "C:\Windows\System32\drivers\etc\hosts" -Destination "C:\ArcBox\hosts_backup" -Recurse -Force -ErrorAction Continue
-# $s = Get-Content "C:\ArcBox\merge.txt"
-# Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value $s -Encoding ascii
-
 # Creating Azure Data Studio settings for database connections
 Write-Host ""
 Write-Host "Creating Azure Data Studio settings for database connections"
