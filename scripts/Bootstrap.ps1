@@ -21,7 +21,8 @@ param (
     [string]$POSTGRES_NAME,   
     [string]$POSTGRES_WORKER_NODE_COUNT,
     [string]$POSTGRES_DATASIZE,
-    [string]$POSTGRES_SERVICE_TYPE
+    [string]$POSTGRES_SERVICE_TYPE,
+    [string]$stagingStorageAccountName
 )
 
 [System.Environment]::SetEnvironmentVariable('adminUsername', $adminUsername,[System.EnvironmentVariableTarget]::Machine)
@@ -51,6 +52,7 @@ param (
 [System.Environment]::SetEnvironmentVariable('POSTGRES_WORKER_NODE_COUNT', $POSTGRES_WORKER_NODE_COUNT,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('POSTGRES_DATASIZE', $POSTGRES_DATASIZE,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('POSTGRES_SERVICE_TYPE', $POSTGRES_SERVICE_TYPE,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('stagingStorageAccountName', $stagingStorageAccountName,[System.EnvironmentVariableTarget]::Machine)
 
 # Create path
 Write-Output "Create ArcBox path"

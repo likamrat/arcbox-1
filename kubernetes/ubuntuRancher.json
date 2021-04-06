@@ -96,6 +96,12 @@
             "metadata": {
                 "description": "Azure AD tenant id for your service principal"
             }
+        },
+        "stagingStorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name for the staging storage account using to hold kubeconfig. This value is passed into the template as an output from mgmtStagingStorage.json"
+            }
         }
     },
     "variables": {
@@ -346,7 +352,7 @@
                 "settings": {
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('bash install_k3s.sh', ' ', parameters('adminUsername'), ' ', parameters('spnClientId'), ' ', parameters('spnClientSecret'), ' ', parameters('spnTenantId'), ' ', parameters('vmName'), ' ', parameters('azureLocation'))]",
+                    "commandToExecute": "[concat('bash install_k3s.sh', ' ', parameters('adminUsername'), ' ', parameters('spnClientId'), ' ', parameters('spnClientSecret'), ' ', parameters('spnTenantId'), ' ', parameters('vmName'), ' ', parameters('azureLocation'), ' ', parameters('stagingStorageAccountName'))]",
                     "fileUris": [ "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/install_k3s.sh" ]
                 }
             }

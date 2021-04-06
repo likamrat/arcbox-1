@@ -16,12 +16,14 @@ echo $SPN_CLIENT_SECRET:$3 | awk '{print substr($1,2); }' >> vars.sh
 echo $SPN_TENANT_ID:$4 | awk '{print substr($1,2); }' >> vars.sh
 echo $vmName:$5 | awk '{print substr($1,2); }' >> vars.sh
 echo $location:$6 | awk '{print substr($1,2); }' >> vars.sh
+echo $stagingStorageAccountName:$7 | awk '{print substr($1,2); }' >> vars.sh
 sed -i '2s/^/export adminUsername=/' vars.sh
 sed -i '3s/^/export SPN_CLIENT_ID=/' vars.sh
 sed -i '4s/^/export SPN_CLIENT_SECRET=/' vars.sh
 sed -i '5s/^/export SPN_TENANT_ID=/' vars.sh
 sed -i '6s/^/export vmName=/' vars.sh
 sed -i '7s/^/export location=/' vars.sh
+sed -i '8s/^/export stagingStorageAccountName=/' vars.sh
 
 chmod +x vars.sh 
 . ./vars.sh
@@ -88,12 +90,12 @@ $psCred = New-Object System.Management.Automation.PSCredential($SPN_CLIENT_ID , 
 Connect-AzAccount -Credential $psCred -TenantId $SPN_TENANT_ID -ServicePrincipal
 
 $storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
-$storageAccountName = "stagingkube"
+#$storageAccountName = "stagingkube"
 $storageContainerName = "staging"
 $localPath = "~/.kube/config"
 
-$storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $storageAccountName).Value[0]
-$destinationContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+$storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $stagingStorageAccountName).Value[0]
+$destinationContext = New-AzStorageContext -StorageAccountName $stagingStorageAccountName -StorageAccountKey $storageAccountKey
 $containerSASURI = New-AzStorageContainerSASToken -Context $destinationContext -ExpiryTime(get-date).AddSeconds(3600) -FullUri -Name $storageContainerName -Permission rw
 
 New-AzStorageContainer -Context $destinationContext -Name $storageContainerName -Permission Container 
