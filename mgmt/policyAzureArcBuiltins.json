@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Location of your Azure resources"
+            }
+        },
+        "logAnalyticsWorkspace": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of your log analytics workspace"
+            }
+        }
+    },
+    "variables": {
+        "policySetName": "azure-arc-builtin-psd",
+        "policySetDisplayName": "Enable Azure Arc enabled servers built-in policies",
+        "policySetDescription": "This policy initiative uses a sample of available Azure Arc enabled servers built-in policy definitions.",
+        "policyDefinitionForLinuxDeployLogAnalytics": "9d2b61b4-1d14-4a63-be30-d4498e7ad2cf",
+        "policyDefinitionForWindowsDeployLogAnalytics": "69af7d4a-7b18-4044-93a9-2651498ef203"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "apiVersion": "2019-09-01",
+            "name": "[variables('policySetName')]",
+            "properties": {
+                "displayName": "[variables('policySetDisplayName')]",
+                "description": "[variables('policySetDescription')]",
+                "policyType": "Custom",
+                "metadata": {
+                    "category": "AzureArc"
+                },
+                "policyDefinitions": [
+                    {
+                        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/', variables('policyDefinitionForLinuxDeployLogAnalytics'))]",
+                        "policyDefinitionReferenceId": "LinuxDeployLogAnalytics",
+                        "parameters": {
+                            "location": {
+                                "value": "[parameters('azureLocation')]"
+                            },
+                            "logAnalytics": {
+                                "value": "[parameters('logAnalyticsWorkspace')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/', variables('policyDefinitionForWindowsDeployLogAnalytics'))]",
+                        "policyDefinitionReferenceId": "WindowsDeployLogAnalytics",
+                        "parameters": {
+                            "location": {
+                                "value": "[parameters('azureLocation')]"
+                            },
+                            "logAnalytics": {
+                                "value": "[parameters('logAnalyticsWorkspace')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
