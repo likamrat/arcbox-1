@@ -47,7 +47,7 @@ if(($env:dockerTag -ne $NULL) -or ($env:dockerTag -ne ""))
     azdata arc dc config replace --path ./custom/control.json --json-values "spec.docker.imageTag=$env:dockerTag"
 }
 
-azdata arc dc create --namespace $env:arcDcName --name $env:arcDcName --subscription $env:subscriptionId --resource-group $env:resourceGroup --location $env:azureLocation --connectivity-mode direct --path ./custom
+azdata arc dc create --namespace $env:arcDcName --name $env:arcDcName --subscription $env:subscriptionId --resource-group $env:resourceGroup --location $env:azureLocation --connectivity-mode indirect --path ./custom
 Start-Sleep -s 30
 
 Write-Host "Deploying SQL MI and Postgres data services"
