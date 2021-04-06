@@ -85,7 +85,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "policyDeployment",
-      "dependsOn": [ "[concat(parameters('workspaceName'), '/' , 'Automation')]" ],
+      "dependsOn": [
+        "[parameters('workspaceName')]",
+        "[parameters('automationAccountName')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
