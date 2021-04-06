@@ -125,7 +125,7 @@ Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
 
 # Downloading Rancher K3s kubeconfig file
 Write-Output "Downloading Rancher K3s kubeconfig file"
-$sourceFolder = 'https://stagingkube.blob.core.windows.net/staging'
+$sourceFolder = "https://$env:stagingStorageAccountName.blob.core.windows.net/staging"
 azcopy cp --check-md5 FailIfDifferentOrMissing $sourceFolder/*?  "C:\Users\$env:USERNAME\.kube\config-k3s"
 Move-Item -Path "C:\Users\$env:USERNAME\.kube\config-k3s\config" -Destination "C:\Users\arcdemo\.kube\config-k3s.txt"
 Remove-Item -Path "C:\Users\$env:USERNAME\.kube\config-k3s\" -Force
