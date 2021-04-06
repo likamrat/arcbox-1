@@ -60,10 +60,10 @@ sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $
 sudo service sshd restart
 
 # Copying Rancher K3s kubeconfig file to staging storage account
-az extension add --upgrade -n storage-preview
-storageAccountRG=$(az storage account show --name $stagingStorageAccountName --query 'resourceGroup' | sed -e 's/^"//' -e 's/"$//')
+sudo -u $adminUsername az extension add --upgrade -n storage-preview
+storageAccountRG=$(sudo -u $adminUsername az storage account show --name $stagingStorageAccountName --query 'resourceGroup' | sed -e 's/^"//' -e 's/"$//')
 storageContainerName="staging"
 localPath="/home/arcdemo/.kube/config"
-storageAccountKey=$(az storage account keys list --resource-group $storageAccountRG --account-name $stagingStorageAccountName --query [0].value | sed -e 's/^"//' -e 's/"$//')
-az storage container create -n $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey
-az storage azcopy blob upload --container $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey --source $localPath
+storageAccountKey=$(sudo -u $adminUsername az storage account keys list --resource-group $storageAccountRG --account-name $stagingStorageAccountName --query [0].value | sed -e 's/^"//' -e 's/"$//')
+sudo -u $adminUsername az storage container create -n $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey
+sudo -u $adminUsername az storage azcopy blob upload --container $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey --source $localPath
