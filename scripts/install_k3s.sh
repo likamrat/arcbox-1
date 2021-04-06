@@ -59,19 +59,6 @@ sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $
 
 sudo service sshd restart
 
-# Update the list of packages
-sudo apt-get update
-# Install pre-requisite packages.
-sudo apt-get install -y wget apt-transport-https software-properties-common
-# Download the Microsoft repository GPG keys
-wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-# Register the Microsoft repository GPG keys
-sudo dpkg -i packages-microsoft-prod.deb
-# Update the list of products
-sudo apt-get update
-# Enable the "universe" repositories
-sudo add-apt-repository universe
-
 # Copying Rancher K3s kubeconfig file to staging storage account
 az extension add --upgrade -n storage-preview
 storageAccountRG=$(az storage account show --name $stagingStorageAccountName --query 'resourceGroup' | sed -e 's/^"//' -e 's/"$//')
