@@ -56,3 +56,46 @@ resourceGroup=$(sudo -u $adminUsername az resource list --query "[?name=='$vmNam
 sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroup --location $location --tags 'Project=jumpstart_azure_arc_k8s'
 
 sudo service sshd restart
+
+# Update the list of packages
+sudo apt-get update
+# Install pre-requisite packages.
+sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+# Register the Microsoft repository GPG keys
+sudo dpkg -i packages-microsoft-prod.deb
+# Update the list of products
+sudo apt-get update
+# Enable the "universe" repositories
+sudo add-apt-repository universe
+# Install PowerShell
+sudo apt-get install -y powershell
+# Start PowerShell
+pwsh
+
+# Download AzCopy
+wget https://aka.ms/downloadazcopy-v10-linux
+# Expand Archive
+tar -xvf downloadazcopy-v10-linux
+# Move AzCopy to the destination you want to store it
+sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/
+
+
+# Copying Rancher K3s kubeconfig file to staging storage account
+$azurePassword = ConvertTo-SecureString $SPN_CLIENT_SECRET -AsPlainText -Force
+$psCred = New-Object System.Management.Automation.PSCredential($SPN_CLIENT_ID , $azurePassword)
+Connect-AzAccount -Credential $psCred -TenantId $SPN_TENANT_ID -ServicePrincipal
+
+$storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
+$storageAccountName = "stagingkube"
+$storageContainerName = "staging"
+$localPath = "~/.kube/config"
+
+$storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $storageAccountName).Value[0]
+$destinationContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+$containerSASURI = New-AzStorageContainerSASToken -Context $destinationContext -ExpiryTime(get-date).AddSeconds(3600) -FullUri -Name $storageContainerName -Permission rw
+
+New-AzStorageContainer -Context $destinationContext -Name $storageContainerName -Permission Container 
+
+sudo azcopy cp $localPath $containerSASURI --recursive
