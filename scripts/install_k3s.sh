@@ -74,7 +74,7 @@ sudo add-apt-repository universe
 # Install PowerShell
 sudo apt-get install -y powershell
 # Start PowerShell
-pwsh
+# pwsh
 
 # Download AzCopy
 wget https://aka.ms/downloadazcopy-v10-linux
@@ -83,21 +83,20 @@ tar -xvf downloadazcopy-v10-linux
 # Move AzCopy to the destination you want to store it
 sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
-
 # Copying Rancher K3s kubeconfig file to staging storage account
-$azurePassword = ConvertTo-SecureString $SPN_CLIENT_SECRET -AsPlainText -Force
-$psCred = New-Object System.Management.Automation.PSCredential($SPN_CLIENT_ID , $azurePassword)
-Connect-AzAccount -Credential $psCred -TenantId $SPN_TENANT_ID -ServicePrincipal
+pwsh -Command $azurePassword = ConvertTo-SecureString $SPN_CLIENT_SECRET -AsPlainText -Force
+pwsh -Command $psCred = New-Object System.Management.Automation.PSCredential($SPN_CLIENT_ID , $azurePassword)
+pwsh -Command Connect-AzAccount -Credential $psCred -TenantId $SPN_TENANT_ID -ServicePrincipal
 
-$storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
+pwsh -Command $storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
 #$storageAccountName = "stagingkube"
 $storageContainerName = "staging"
 $localPath = "~/.kube/config"
 
-$storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $stagingStorageAccountName).Value[0]
-$destinationContext = New-AzStorageContext -StorageAccountName $stagingStorageAccountName -StorageAccountKey $storageAccountKey
-$containerSASURI = New-AzStorageContainerSASToken -Context $destinationContext -ExpiryTime(get-date).AddSeconds(3600) -FullUri -Name $storageContainerName -Permission rw
+pwsh -Command $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $stagingStorageAccountName).Value[0]
+pwsh -Command $destinationContext = New-AzStorageContext -StorageAccountName $stagingStorageAccountName -StorageAccountKey $storageAccountKey
+pwsh -Command $containerSASURI = New-AzStorageContainerSASToken -Context $destinationContext -ExpiryTime(get-date).AddSeconds(3600) -FullUri -Name $storageContainerName -Permission rw
 
-New-AzStorageContainer -Context $destinationContext -Name $storageContainerName -Permission Container 
+pwsh -Command New-AzStorageContainer -Context $destinationContext -Name $storageContainerName -Permission Container 
 
 sudo azcopy cp $localPath $containerSASURI --recursive
