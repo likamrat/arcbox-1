@@ -195,7 +195,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "mgmtStagingStorageUrl",
+          "uri": "[variables('mgmtStagingStorageUrl')]",
           "contentVersion": "1.0.0.0"
         }
       }
