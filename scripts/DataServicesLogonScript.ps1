@@ -123,6 +123,31 @@ $pg = Get-Content $postgresfile
 Remove-Item "C:\ArcBox\sql_instance_list.txt" -Force
 Remove-Item "C:\ArcBox\postgres_instance_endpoint.txt" -Force
 
+# Downloading Rancher K3s kubeconfig file
+Write-Output "Downloading Rancher K3s kubeconfig file"
+$sourceFolder = 'https://stagingkube.blob.core.windows.net/staging'
+azcopy cp --check-md5 FailIfDifferentOrMissing $sourceFolder/*?  "C:\Users\$env:USERNAME\.kube\config-k3s"
+Move-Item -Path "C:\Users\$env:USERNAME\.kube\config-k3s\config" -Destination "C:\Users\arcdemo\.kube\config-k3s.txt"
+Remove-Item -Path "C:\Users\$env:USERNAME\.kube\config-k3s\" -Force
+
+# Merging kubeconfig files from AKS and Rancher K3s
+Write-Output "Merging kubeconfig files from AKS and Rancher K3s"
+Copy-Item -Path "C:\Users\$env:USERNAME\.kube\config" -Destination "C:\Users\$env:USERNAME\.kube\config.backup"
+$env:KUBECONFIG="C:\Users\$env:USERNAME\.kube\config;C:\Users\$env:USERNAME\.kube\config-k3s.txt"
+kubectl config view  --raw > C:\users\$env:USERNAME\.kube\config_tmp
+kubectl config get-clusters --kubeconfig=C:\users\$env:USERNAME\.kube\config_tmp
+Remove-Item C:\users\$env:USERNAME\.kube\config
+Remove-Item C:\users\$env:USERNAME\.kube\config-k3s.txt
+Move-Item C:\users\$env:USERNAME\.kube\config_tmp C:\users\$env:USERNAME\.kube\config
+$env:KUBECONFIG="C:\users\$env:USERNAME\.kube\config"
+kubectx
+
+# Deleting staging storage account
+Write-Output "Deleting stagingkube storage account"
+$env:storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
+$env:storageAccountName = "stagingkube"
+Remove-AzStorageAccount -ResourceGroupName $env:storageAccountRG -Name $env:storageAccountName -Force
+
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
 Stop-Process -Name powershell -Force
