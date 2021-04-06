@@ -32,10 +32,10 @@
   "variables": {
     "Updates": {
       "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
-      "galleryName": "Updates",
-      "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
-      "policyTemplate": "[uri(variables('templateBaseUrl'), 'mgmt/policyAzureArcBuiltins.json')]"
-    }
+      "galleryName": "Updates"
+    },
+    "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
+    "policyTemplate": "[uri(variables('templateBaseUrl'), 'mgmt/policyAzureArcBuiltins.json')]"
   },
   "resources": [
     {
