@@ -143,10 +143,10 @@ $env:KUBECONFIG="C:\users\$env:USERNAME\.kube\config"
 kubectx
 
 # Deleting staging storage account
-Write-Output "Deleting stagingkube storage account"
-$env:storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
-#$env:storageAccountName = "stagingkube"
-Remove-AzStorageAccount -ResourceGroupName $env:storageAccountRG -Name $env:stagingStorageAccountName -Force
+# Write-Output "Deleting stagingkube storage account"
+# $env:storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
+# #$env:storageAccountName = "stagingkube"
+# Remove-AzStorageAccount -ResourceGroupName $env:storageAccountRG -Name $env:stagingStorageAccountName -Force
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
