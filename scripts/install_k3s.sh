@@ -71,32 +71,12 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt-get update
 # Enable the "universe" repositories
 sudo add-apt-repository universe
-# Install PowerShell
-sudo apt-get install -y powershell
-# Start PowerShell
-# pwsh
-
-# Download AzCopy
-wget https://aka.ms/downloadazcopy-v10-linux
-# Expand Archive
-tar -xvf downloadazcopy-v10-linux
-# Move AzCopy to the destination you want to store it
-sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
 # Copying Rancher K3s kubeconfig file to staging storage account
-pwsh -Command $azurePassword = ConvertTo-SecureString $SPN_CLIENT_SECRET -AsPlainText -Force
-pwsh -Command $psCred = New-Object System.Management.Automation.PSCredential($SPN_CLIENT_ID , $azurePassword)
-pwsh -Command Connect-AzAccount -Credential $psCred -TenantId $SPN_TENANT_ID -ServicePrincipal
-
-pwsh -Command $storageAccountRG = (Get-AzResource -name "ArcBox-Client" | Select-Object ResourceGroupName).ResourceGroupName
-#$storageAccountName = "stagingkube"
-$storageContainerName = "staging"
-$localPath = "~/.kube/config"
-
-pwsh -Command $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $storageAccountRG -AccountName $stagingStorageAccountName).Value[0]
-pwsh -Command $destinationContext = New-AzStorageContext -StorageAccountName $stagingStorageAccountName -StorageAccountKey $storageAccountKey
-pwsh -Command $containerSASURI = New-AzStorageContainerSASToken -Context $destinationContext -ExpiryTime(get-date).AddSeconds(3600) -FullUri -Name $storageContainerName -Permission rw
-
-pwsh -Command New-AzStorageContainer -Context $destinationContext -Name $storageContainerName -Permission Container 
-
-sudo azcopy cp $localPath $containerSASURI --recursive
+az extension add --upgrade -n storage-preview
+storageAccountRG=$(az storage account show --name $stagingStorageAccountName --query 'resourceGroup' | sed -e 's/^"//' -e 's/"$//')
+storageContainerName="staging"
+localPath="/home/arcdemo/.kube/config"
+storageAccountKey=$(az storage account keys list --resource-group $storageAccountRG --account-name $stagingStorageAccountName --query [0].value | sed -e 's/^"//' -e 's/"$//')
+az storage container create -n $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey
+az storage azcopy blob upload --container $storageContainerName --account-name $stagingStorageAccountName --account-key $storageAccountKey --source $localPath
