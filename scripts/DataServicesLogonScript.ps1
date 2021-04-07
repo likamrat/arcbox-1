@@ -62,15 +62,15 @@ Workflow DatabaseDeploy
             azdata login --namespace $env:arcDcName
             azdata arc postgres server create --name $env:POSTGRES_NAME --workers $env:POSTGRES_WORKER_NODE_COUNT --storage-class-data managed-premium --storage-class-logs managed-premium
             azdata arc postgres endpoint list --name $env:POSTGRES_NAME
-            Start-Sleep -Seconds 300
             # Downloading demo database and restoring onto Postgres
-            $podname = "$env:POSTGRES_NAME" + "c-0"
-            Write-Host "Downloading AdventureWorks.sql template for Postgres... (1/3)"
-            kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -O https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2>&1 $null
-            Write-Host "Creating AdventureWorks database on Postgres... (2/3)"
-            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2>&1 $null
-            Write-Host "Restoring AdventureWorks database on Postgres. (3/3)"
-            kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql 2>&1 $null
+            # $podname = "$env:POSTGRES_NAME" + "c-0"
+            # Start-Sleep -Seconds 300
+            # Write-Host "Downloading AdventureWorks.sql template for Postgres... (1/3)"
+            # kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -O https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2>&1 $null
+            # Write-Host "Creating AdventureWorks database on Postgres... (2/3)"
+            # kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2>&1 $null
+            # Write-Host "Restoring AdventureWorks database on Postgres. (3/3)"
+            # kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -d adventureworks -f /tmp/AdventureWorks.sql 2>&1 $null
         }
         InlineScript {
             # Deploying Azure Arc SQL Managed Instance
@@ -78,13 +78,13 @@ Workflow DatabaseDeploy
             azdata arc sql mi create --name $env:mssqlmiName --storage-class-data managed-premium --storage-class-logs managed-premium
             azdata arc sql mi list
             # Downloading demo database and restoring onto SQL MI
-            $podname = "$env:mssqlMiName" + "-0"
-            Start-Sleep -Seconds 300
-            Write-Host "Downloading AdventureWorks database for MS SQL... (1/2)"
-            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak 2>&1 $null
-            Start-Sleep -Seconds 5
-            Write-Host "Restoring AdventureWorks database for MS SQL. (2/2)"
-            kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" 2>&1 $null
+            # $podname = "$env:mssqlMiName" + "-0"
+            # Start-Sleep -Seconds 300
+            # Write-Host "Downloading AdventureWorks database for MS SQL... (1/2)"
+            # kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak -O /var/opt/mssql/data/AdventureWorks2019.bak 2>&1 $null
+            # Start-Sleep -Seconds 5
+            # Write-Host "Restoring AdventureWorks database for MS SQL. (2/2)"
+            # kubectl exec $podname -n $env:arcDcName -c arc-sqlmi -- /opt/mssql-tools/bin/sqlcmd -S localhost -U $env:AZDATA_USERNAME -P $env:AZDATA_PASSWORD -Q "RESTORE DATABASE AdventureWorks2019 FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks2019.mdf', MOVE 'AdventureWorks2017_Log' TO '/var/opt/mssql/data/AdventureWorks2019_Log.ldf'" 2>&1 $null
         }
     }
 }
