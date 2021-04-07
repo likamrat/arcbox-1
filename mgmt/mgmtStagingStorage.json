@@ -24,7 +24,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[concat('staging', uniquestring(resourceGroup().id))]"
+        "storageAccountName": "[concat('arcboxstaging', uniquestring(resourceGroup().id))]"
     },
     "resources": [
         {
