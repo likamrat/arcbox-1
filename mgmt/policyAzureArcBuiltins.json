@@ -24,6 +24,10 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "name": "[guid(variables('policyDefinitionForLinuxDeployLogAnalytics'), resourceGroup().name)]",
             "apiVersion": "2019-09-01",
+            "location": "[parameters('azureLocation')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
                 "policyDefinitionId": "[variables('policyDefinitionForLinuxDeployLogAnalytics')]",
@@ -41,6 +45,7 @@
             "identity": {
                 "type": "SystemAssigned"
             },
+            "location": "[parameters('azureLocation')]",
             "properties": {
                 "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
                 "policyDefinitionId": "[variables('policyDefinitionForWindowsDeployLogAnalytics')]",
