@@ -22,7 +22,7 @@
     "resources": [
         {
             "type": "Microsoft.Authorization/policyAssignments",
-            "name": "[guid(variables('policyDefinitionForLinuxDeployLogAnalytics'), resourceGroup().name)]",
+            "name": "Deploy Log Analytics Agent on Linux VMs",
             "apiVersion": "2019-09-01",
             "location": "[parameters('azureLocation')]",
             "identity": {
@@ -40,7 +40,7 @@
         },
         {
             "type": "Microsoft.Authorization/policyAssignments",
-            "name": "[guid(variables('policyDefinitionForWindowsDeployLogAnalytics'), resourceGroup().name)]",
+            "name": "Deploy Log Analytics Agent on Windows VMs",
             "apiVersion": "2019-09-01",
             "identity": {
                 "type": "SystemAssigned"
