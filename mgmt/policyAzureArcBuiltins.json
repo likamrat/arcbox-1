@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "azureLocation": {
@@ -25,7 +25,8 @@
     "resources": [
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2020-03-01",
+            "scope": "[resourceGroup().id]",
             "name": "[variables('policySetName')]",
             "properties": {
                 "displayName": "[variables('policySetDisplayName')]",
