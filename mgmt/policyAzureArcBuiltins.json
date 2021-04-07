@@ -38,6 +38,9 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "name": "[guid(variables('policyDefinitionForWindowsDeployLogAnalytics'), resourceGroup().name)]",
             "apiVersion": "2019-09-01",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
                 "policyDefinitionId": "[variables('policyDefinitionForWindowsDeployLogAnalytics')]",
