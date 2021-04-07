@@ -8,12 +8,6 @@
         "description": "Name for your log analytics workspace"
       }
     },
-    "automationAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name for your automation account"
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -31,11 +25,12 @@
   },
   "variables": {
     "Updates": {
-      "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
+      "name": "[concat('ArcBox-Updates', '(', parameters('workspaceName'), ')')]",
       "galleryName": "Updates"
     },
     "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
-    "policyTemplate": "[uri(variables('templateBaseUrl'), 'mgmt/policyAzureArcBuiltins.json')]"
+    "policyTemplate": "[uri(variables('templateBaseUrl'), 'mgmt/policyAzureArcBuiltins.json')]",
+    "automationAccountName": "[concat('ArcBox-Automation-', uniquestring(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -71,7 +66,7 @@
     {
       "type": "Microsoft.Automation/automationAccounts",
       "apiVersion": "2020-01-13-preview",
-      "name": "[parameters('automationAccountName')]",
+      "name": "[variables('automationAccountName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
         "[parameters('workspaceName')]"

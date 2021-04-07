@@ -62,12 +62,6 @@
       "metadata": {
         "description": "Name for your log analytics workspace"
       }
-    },
-    "automationAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name for your automation account"
-      }
     }
   },
   "variables": {
@@ -213,9 +207,6 @@
         "parameters": {
           "workspaceName": {
             "value": "[parameters('workspaceName')]"
-          },
-          "automationAccountName": {
-            "value": "[parameters('automationAccountName')]"
           }
         }
       }
