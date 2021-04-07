@@ -27,7 +27,11 @@
             "properties": {
                 "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
                 "policyDefinitionId": "[variables('policyDefinitionForLinuxDeployLogAnalytics')]",
-
+                "parameters": {
+                    "logAnalytics": {
+                        "value": "[parameters('logAnalyticsWorkspace')]"
+                    }
+                }
             }
         },
         {
@@ -37,6 +41,11 @@
             "properties": {
                 "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
                 "policyDefinitionId": "[variables('policyDefinitionForWindowsDeployLogAnalytics')]",
+                "parameters": {
+                    "logAnalytics": {
+                        "value": "[parameters('logAnalyticsWorkspace')]"
+                    }
+                }
             }
         }
     ]
