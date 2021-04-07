@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "azureLocation": {
@@ -16,51 +16,42 @@
         }
     },
     "variables": {
-        "policySetName": "azure-arc-builtin-psd",
-        "policySetDisplayName": "Enable Azure Arc enabled servers built-in policies",
-        "policySetDescription": "This policy initiative uses a sample of available Azure Arc enabled servers built-in policy definitions.",
         "policyDefinitionForLinuxDeployLogAnalytics": "9d2b61b4-1d14-4a63-be30-d4498e7ad2cf",
         "policyDefinitionForWindowsDeployLogAnalytics": "69af7d4a-7b18-4044-93a9-2651498ef203"
     },
     "resources": [
         {
-            "type": "Microsoft.Authorization/policySetDefinitions",
-            "apiVersion": "2020-03-01",
-            "scope": "[resourceGroup().id]",
-            "name": "[variables('policySetName')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[guid(variables('policyDefinitionForLinuxDeployLogAnalytics'), resourceGroup().name)]",
+            "apiVersion": "2019-09-01",
             "properties": {
-                "displayName": "[variables('policySetDisplayName')]",
-                "description": "[variables('policySetDescription')]",
-                "policyType": "Custom",
-                "metadata": {
-                    "category": "AzureArc"
-                },
-                "policyDefinitions": [
-                    {
-                        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/', variables('policyDefinitionForLinuxDeployLogAnalytics'))]",
-                        "policyDefinitionReferenceId": "LinuxDeployLogAnalytics",
-                        "parameters": {
-                            "location": {
-                                "value": "[parameters('azureLocation')]"
-                            },
-                            "logAnalytics": {
-                                "value": "[parameters('logAnalyticsWorkspace')]"
-                            }
-                        }
+                "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
+                "policyDefinitionId": "[variables('policyDefinitionForLinuxDeployLogAnalytics')]",
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('azureLocation')]"
                     },
-                    {
-                        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/', variables('policyDefinitionForWindowsDeployLogAnalytics'))]",
-                        "policyDefinitionReferenceId": "WindowsDeployLogAnalytics",
-                        "parameters": {
-                            "location": {
-                                "value": "[parameters('azureLocation')]"
-                            },
-                            "logAnalytics": {
-                                "value": "[parameters('logAnalyticsWorkspace')]"
-                            }
-                        }
+                    "logAnalytics": {
+                        "value": "[parameters('logAnalyticsWorkspace')]"
                     }
-                ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[guid(variables('policyDefinitionForWindowsDeployLogAnalytics'), resourceGroup().name)]",
+            "apiVersion": "2019-09-01",
+            "properties": {
+                "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)]",
+                "policyDefinitionId": "[variables('policyDefinitionForWindowsDeployLogAnalytics')]",
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('azureLocation')]"
+                    },
+                    "logAnalytics": {
+                        "value": "[parameters('logAnalyticsWorkspace')]"
+                    }
+                }
             }
         }
     ]
