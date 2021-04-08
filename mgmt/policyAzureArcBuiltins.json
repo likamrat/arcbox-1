@@ -43,6 +43,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "name": "[guid(variables('policyNameForLinuxDeployLogAnalytics'), resourceGroup().id)]",
+            "dependsOn": ["[variables('policyNameForLinuxDeployLogAnalytics')]"],
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
@@ -70,6 +71,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "name": "[guid(variables('policyNameForWindowsDeployLogAnalytics'), resourceGroup().id)]",
+            "dependsOn": ["[variables('policyNameForWindowsDeployLogAnalytics')]"],
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
