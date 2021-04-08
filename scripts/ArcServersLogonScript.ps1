@@ -128,30 +128,30 @@ Invoke-Expression $command
 
 # Create the nested VMs
 Write-Output "Create Hyper-V VMs"
-New-VM -Name ArcBoxWin -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBoxWin\Virtual Hard Disks\ArcBoxWin.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
-Set-VMProcessor -VMName ArcBoxWin -Count 2
+New-VM -Name ArcBox-Win -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBox-Win\Virtual Hard Disks\ArcBox-Win.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
+Set-VMProcessor -VMName ArcBox-Win -Count 2
 
-New-VM -Name ArcBoxSQL -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBoxSQL\Virtual Hard Disks\ArcBoxSQL.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
-Set-VMProcessor -VMName ArcBoxSQL -Count 2
+New-VM -Name ArcBox-SQL -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBox-SQL\Virtual Hard Disks\ArcBox-SQL.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
+Set-VMProcessor -VMName ArcBox-SQL -Count 2
 
-New-VM -Name ArcBoxUbuntu -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBoxUbuntu\Virtual Hard Disks\ArcBoxUbuntu.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
-Set-VMFirmware -VMName ArcBoxUbuntu -EnableSecureBoot On -SecureBootTemplate 'MicrosoftUEFICertificateAuthority'
-Set-VMProcessor -VMName ArcBoxUbuntu -Count 2
+New-VM -Name ArcBox-Ubuntu -MemoryStartupBytes 12GB -BootDevice VHD -VHDPath "$vmdir\ArcBox-Ubuntu\Virtual Hard Disks\ArcBox-Ubuntu.vhdx" -Path $vmdir -Generation 2 -Switch $switchName
+Set-VMFirmware -VMName ArcBox-Ubuntu -EnableSecureBoot On -SecureBootTemplate 'MicrosoftUEFICertificateAuthority'
+Set-VMProcessor -VMName ArcBox-Ubuntu -Count 2
 
 # We always want the VMs to start with the host and shut down cleanly with the host
 Write-Output "Set VM auto start/stop"
-Set-VM -Name ArcBoxWin -AutomaticStartAction Start -AutomaticStopAction ShutDown
-Set-VM -Name ArcBoxSQL -AutomaticStartAction Start -AutomaticStopAction ShutDown
-Set-VM -Name ArcBoxUbuntu -AutomaticStartAction Start -AutomaticStopAction ShutDown
+Set-VM -Name ArcBox-Win -AutomaticStartAction Start -AutomaticStopAction ShutDown
+Set-VM -Name ArcBox-SQL -AutomaticStartAction Start -AutomaticStopAction ShutDown
+Set-VM -Name ArcBox-Ubuntu -AutomaticStartAction Start -AutomaticStopAction ShutDown
 
 Write-Output "Enabling Guest Integration Service"
 Get-VM | Get-VMIntegrationService | ? {-not($_.Enabled)} | Enable-VMIntegrationService -Verbose
 
 # Start all the VMs
 Write-Output "Start VMs"
-Start-VM -Name ArcBoxWin
-Start-VM -Name ArcBoxSQL
-Start-VM -Name ArcBoxUbuntu
+Start-VM -Name ArcBox-Win
+Start-VM -Name ArcBox-SQL
+Start-VM -Name ArcBox-Ubuntu
 
 Start-Sleep -s 20
 $username = "Administrator"
@@ -159,8 +159,8 @@ $password = "ArcDemo123!!"
 $secstr = New-Object -TypeName System.Security.SecureString
 $password.ToCharArray() | ForEach-Object {$secstr.AppendChar($_)}
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $username, $secstr
-Invoke-Command -VMName ArcBoxWin -ScriptBlock { Get-NetAdapter | Restart-NetAdapter } -Credential $cred
-Invoke-Command -VMName ArcBoxSQL -ScriptBlock { Get-NetAdapter | Restart-NetAdapter } -Credential $cred
+Invoke-Command -VMName ArcBox-Win -ScriptBlock { Get-NetAdapter | Restart-NetAdapter } -Credential $cred
+Invoke-Command -VMName ArcBox-SQL -ScriptBlock { Get-NetAdapter | Restart-NetAdapter } -Credential $cred
 
 Start-Sleep -s 5
 
@@ -177,7 +177,7 @@ $nestedLinuxUsername = "arcdemo"
 $nestedLinuxPassword = "ArcDemo123!!"
 
 # Getting the Ubuntu nested VM IP address
-Get-VM -Name "ArcBoxUbuntu" | Select-Object -ExpandProperty NetworkAdapters | Select-Object IPAddresses | Format-List | Out-File "$agentScript\IP.txt"
+Get-VM -Name "ArcBox-Ubuntu" | Select-Object -ExpandProperty NetworkAdapters | Select-Object IPAddresses | Format-List | Out-File "$agentScript\IP.txt"
 $ipFile = "$agentScript\IP.txt"
 (Get-Content $ipFile | Select-Object -Skip 2) | Set-Content $ipFile
 $string = Get-Content "$ipFile"
@@ -209,8 +209,8 @@ Write-Output "Copying the Azure Arc onboarding script to the nested VMs"
 (Get-Content -path "$agentScript\ArcAgent4.sh" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgent5.sh"
 (Get-Content -path "$agentScript\ArcAgent5.sh" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.sh"
 
-Copy-VMFile "ArcBoxWin" -SourcePath "$agentScript\installArcAgentModified.ps1" -DestinationPath C:\Temp\installArcAgent.ps1 -CreateFullPath -FileSource Host
-Copy-VMFile "ArcBoxSQL" -SourcePath "$agentScript\installArcAgentSQLModified.ps1" -DestinationPath C:\Temp\installArcAgentSQL.ps1 -CreateFullPath -FileSource Host
+Copy-VMFile "ArcBox-Win" -SourcePath "$agentScript\installArcAgentModified.ps1" -DestinationPath C:\Temp\installArcAgent.ps1 -CreateFullPath -FileSource Host
+Copy-VMFile "ArcBox-SQL" -SourcePath "$agentScript\installArcAgentSQLModified.ps1" -DestinationPath C:\Temp\installArcAgentSQL.ps1 -CreateFullPath -FileSource Host
 echo y | pscp -P 22 -pw $nestedLinuxPassword "$agentScript\installArcAgentModified.sh" $nestedLinuxUsername@"$vmIp":/home/"$nestedLinuxUsername"
 
 # Onboarding the nested VMs as Azure Arc enabled servers
@@ -219,8 +219,8 @@ $secstr = New-Object -TypeName System.Security.SecureString
 $nestedWindowsPassword.ToCharArray() | ForEach-Object {$secstr.AppendChar($_)}
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $nestedWindowsUsername, $secstr
 
-Invoke-Command -VMName ArcBoxWin -ScriptBlock { powershell -File C:\Temp\installArcAgent.ps1 } -Credential $cred
-Invoke-Command -VMName ArcBoxSQL -ScriptBlock { powershell -File C:\Temp\installArcAgentSQL.ps1 } -Credential $cred
+Invoke-Command -VMName ArcBox-Win -ScriptBlock { powershell -File C:\Temp\installArcAgent.ps1 } -Credential $cred
+Invoke-Command -VMName ArcBox-SQL -ScriptBlock { powershell -File C:\Temp\installArcAgentSQL.ps1 } -Credential $cred
 
 Write-Output "Onboarding the nested Linux VM as an Azure Arc enabled server"
 $secpasswd = ConvertTo-SecureString $nestedLinuxPassword -AsPlainText -Force
