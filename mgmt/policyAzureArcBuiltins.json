@@ -18,8 +18,8 @@
     "variables": {
         "policyDefinitionForLinuxDeployLogAnalytics": "/providers/Microsoft.Authorization/policyDefinitions/9d2b61b4-1d14-4a63-be30-d4498e7ad2cf",
         "policyDefinitionForWindowsDeployLogAnalytics": "/providers/Microsoft.Authorization/policyDefinitions/69af7d4a-7b18-4044-93a9-2651498ef203",
-        "policyNameForLinuxDeployLogAnalytics": "[uniqueString(resourceGroup().id, parameters('azureLocation'), 'policyNameForLinuxDeployLogAnalytics')]",
-        "policyNameForWindowsDeployLogAnalytics": "[uniqueString(resourceGroup().id, parameters('azureLocation'), 'policyNameForWindowsDeployLogAnalytics')]"
+        "policyNameForLinuxDeployLogAnalytics": "policyLinuxDeployLogAnalytics",
+        "policyNameForWindowsDeployLogAnalytics": "policyWindowsDeployLogAnalytics"
     },
     "resources": [
         {
