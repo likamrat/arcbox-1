@@ -42,7 +42,7 @@
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[guid(reference(resourceId('Microsoft.Authorization/policyAssignments', variables('policyNameForLinuxDeployLogAnalytics')),'2019-09-01', 'full').identity.principalId, concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c'), resourceGroup().id)]",
+            "name": "[guid(variables('policyNameForLinuxDeployLogAnalytics'), resourceGroup().id)]",
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
@@ -69,7 +69,7 @@
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[guid(reference(resourceId('Microsoft.Authorization/policyAssignments', variables('policyNameForWindowsDeployLogAnalytics')),'2019-09-01', 'full').identity.principalId, concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c'), resourceGroup().id)]",
+            "name": "[guid(variables('policyNameForWindowsDeployLogAnalytics'), resourceGroup().id)]",
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
