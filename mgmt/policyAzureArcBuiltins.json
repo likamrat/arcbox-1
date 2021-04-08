@@ -42,7 +42,7 @@
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[guid(resourceGroup().id)]",
+            "name": "[newGuid()]",
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
@@ -69,7 +69,7 @@
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[guid(resourceGroup().id)]",
+            "name": "[newGuid()]",
             "apiVersion": "2020-04-01-preview",
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
