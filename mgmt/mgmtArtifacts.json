@@ -25,7 +25,7 @@
   },
   "variables": {
     "Updates": {
-      "name": "[concat('ArcBox-Updates', '(', parameters('workspaceName'), ')')]",
+      "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
       "galleryName": "Updates"
     },
     "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
