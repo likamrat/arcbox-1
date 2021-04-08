@@ -17,7 +17,8 @@
     },
     "variables": {
         "policyDefinitionForLinuxDeployLogAnalytics": "/providers/Microsoft.Authorization/policyDefinitions/9d2b61b4-1d14-4a63-be30-d4498e7ad2cf",
-        "policyDefinitionForWindowsDeployLogAnalytics": "/providers/Microsoft.Authorization/policyDefinitions/69af7d4a-7b18-4044-93a9-2651498ef203"
+        "policyDefinitionForWindowsDeployLogAnalytics": "/providers/Microsoft.Authorization/policyDefinitions/69af7d4a-7b18-4044-93a9-2651498ef203",
+        "uniqueResourceNameBase": "[uniqueString(resourceGroup().id, parameters('azureLocation'), deployment().name)]"
     },
     "resources": [
         {
@@ -54,6 +55,15 @@
                         "value": "[parameters('logAnalyticsWorkspace')]"
                     }
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[guid(resourceGroup().id)]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                "principalId": "[reference(resourceId('Microsoft.Authorization/policyAssignments', variables('uniqueResourceNameBase')),'2019-08-01', 'full').identity.principalId]"
             }
         }
     ]
