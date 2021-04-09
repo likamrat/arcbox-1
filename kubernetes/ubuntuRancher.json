@@ -353,7 +353,7 @@
                 },
                 "protectedSettings": {
                     "commandToExecute": "[concat('bash install_k3s.sh', ' ', parameters('adminUsername'), ' ', parameters('spnClientId'), ' ', parameters('spnClientSecret'), ' ', parameters('spnTenantId'), ' ', parameters('vmName'), ' ', parameters('azureLocation'), ' ', parameters('stagingStorageAccountName'))]",
-                    "fileUris": [ "https://raw.githubusercontent.com/likamrat/arcbox-1/main/scripts/install_k3s.sh" ]
+                    "fileUris": [ "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/install_k3s.sh" ]
                 }
             }
         }
