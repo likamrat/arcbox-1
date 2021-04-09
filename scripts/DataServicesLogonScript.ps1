@@ -10,6 +10,12 @@ Write-Host "`n"
 kubectl get nodes
 azdata --version
 
+Write-Host "Enabling Container insights for AKS"
+Set-Item Env:\SuppressAzurePowerShellBreakingChangeWarnings "true"
+$env:resourceGroup=(Get-AzResource -Name ArcBox-Client).ResourceGroupName
+$env:workspaceId=(Get-AzResource -Name $env:workspaceName).ResourceId
+Get-AzAksCluster -ResourceGroupName $env:resourceGroup -Name ArcBox-Data | Enable-AzAksAddon -Name Monitoring -WorkspaceResourceId $env:workspaceId
+
 Write-Host "Installing Azure Data Studio Extensions"
 Write-Host "`n"
 
@@ -66,7 +72,7 @@ Workflow DatabaseDeploy
             # $podname = "$env:POSTGRES_NAME" + "c-0"
             # Start-Sleep -Seconds 300
             # Write-Host "Downloading AdventureWorks.sql template for Postgres... (1/3)"
-            # kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -O https://raw.githubusercontent.com/dkirby-ms/arcbox/main/scripts/AdventureWorks.sql" 2>&1 $null
+            # kubectl exec $podname -n $env:arcDcName -c postgres -- /bin/bash -c "cd /tmp && curl -k -O https://raw.githubusercontent.com/likamrat/arcbox-1/main/scripts/AdventureWorks.sql" 2>&1 $null
             # Write-Host "Creating AdventureWorks database on Postgres... (2/3)"
             # kubectl exec $podname -n $env:arcDcName -c postgres -- sudo -u postgres psql -c 'CREATE DATABASE "adventureworks";' postgres 2>&1 $null
             # Write-Host "Restoring AdventureWorks database on Postgres. (3/3)"
@@ -142,6 +148,17 @@ Remove-Item C:\users\$env:USERNAME\.kube\config-k3s
 Move-Item C:\users\$env:USERNAME\.kube\config_tmp C:\users\$env:USERNAME\.kube\config
 $env:KUBECONFIG="C:\users\$env:USERNAME\.kube\config"
 kubectx
+
+# Adding Azure Arc enabled Kubernetes CLI extensions
+Write-Output "Adding Azure Arc enabled Kubernetes CLI extensions"
+az extension add --name "connectedk8s" -y
+az extension add --name "k8s-configuration" -y
+az extension add --name "k8s-extension" -y
+
+# Enabling Container insights for Rancher K3s using Kubernetes extension 
+Write-Host "Enabling Container insights for Rancher K3s using Kubernetes extension"
+kubectx arcboxk3s 
+az k8s-extension create -n "azuremonitor-containers" --cluster-name ArcBox-K3s --resource-group $env:resourceGroup --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
