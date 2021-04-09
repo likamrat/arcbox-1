@@ -85,12 +85,12 @@ function Disable-ieESC {
 Disable-ieESC
 
 # Disable PowerShell QuickEdit
-Set-Location HKCU:\Console
-New-Item ‘.%SystemRoot%_System32_WindowsPowerShell_v1.0_Powershell.exe’
-Set-Location ‘.%SystemRoot%_System32_WindowsPowerShell_v1.0_Powershell.exe’
-New-ItemProperty . QuickEdit –Type DWORD –Value 0x00000000
-New-ItemProperty . InsertMode –Type DWORD –Value 0x00000000
-Pop-Location
+# Set-Location HKCU:\Console
+# New-Item ‘.%SystemRoot%_System32_WindowsPowerShell_v1.0_Powershell.exe’
+# Set-Location ‘.%SystemRoot%_System32_WindowsPowerShell_v1.0_Powershell.exe’
+# New-ItemProperty . QuickEdit –Type DWORD –Value 0x00000000
+# New-ItemProperty . InsertMode –Type DWORD –Value 0x00000000
+# Pop-Location
 
 # Extending C:\ partition to the maximum size
 Write-Host "Extending C:\ partition to the maximum size"
