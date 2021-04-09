@@ -197,7 +197,7 @@ Write-Output "Copying the Azure Arc onboarding script to the nested VMs"
 
 (Get-Content -path "$agentScript\installArcAgentSQL.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgentSQL1.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL1.ps1" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgentSQL2.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL2.ps1" -Raw) -replace '\$resourceGroup',"'$env:myResourceGroup'" | Set-Content -Path "$agentScript\ArcAgentSQL3.ps1"
+(Get-Content -path "$agentScript\ArcAgentSQL2.ps1" -Raw) -replace '\$myResourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgentSQL3.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL3.ps1" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgentSQL4.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL4.ps1" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgentSQL5.ps1"
 (Get-Content -path "$agentScript\ArcAgentSQL5.ps1" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentSQLModified.ps1"
