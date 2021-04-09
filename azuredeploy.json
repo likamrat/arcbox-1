@@ -57,7 +57,7 @@
         "description": "Password for Windows account"
       }
     },
-    "workspaceName": {
+    "logAnalyticsWorkspaceName": {
       "type": "string",
       "metadata": {
         "description": "Name for your log analytics workspace"
@@ -177,7 +177,7 @@
             "value": "[parameters('myIpAddress')]"
           },
           "workspaceName": {
-            "value": "[parameters('workspaceName')]"
+            "value": "[parameters('logAnalyticsWorkspaceName')]"
           },          
           "stagingStorageAccountName": {
             "value": "[reference('stagingStorageAccountDeployment').outputs.storageAccountName.value]"
@@ -209,7 +209,7 @@
         },
         "parameters": {
           "workspaceName": {
-            "value": "[parameters('workspaceName')]"
+            "value": "[parameters('logAnalyticsWorkspaceName')]"
           }
         }
       }
