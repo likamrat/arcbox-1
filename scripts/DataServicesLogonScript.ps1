@@ -10,7 +10,7 @@ Write-Host "`n"
 kubectl get nodes
 azdata --version
 
-Write-Host "Enabling Container insights for AKS"
+Write-Host "Enabling Container Insights for AKS"
 Set-Item Env:\SuppressAzurePowerShellBreakingChangeWarnings "true"
 $env:resourceGroup=(Get-AzResource -Name ArcBox-Client).ResourceGroupName
 $env:workspaceId=(Get-AzResource -Name $env:workspaceName).ResourceId
