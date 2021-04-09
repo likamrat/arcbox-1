@@ -22,7 +22,8 @@ param (
     [string]$POSTGRES_WORKER_NODE_COUNT,
     [string]$POSTGRES_DATASIZE,
     [string]$POSTGRES_SERVICE_TYPE,
-    [string]$stagingStorageAccountName
+    [string]$stagingStorageAccountName,
+    [string]$workspaceName
 )
 
 [System.Environment]::SetEnvironmentVariable('adminUsername', $adminUsername,[System.EnvironmentVariableTarget]::Machine)
@@ -53,6 +54,7 @@ param (
 [System.Environment]::SetEnvironmentVariable('POSTGRES_DATASIZE', $POSTGRES_DATASIZE,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('POSTGRES_SERVICE_TYPE', $POSTGRES_SERVICE_TYPE,[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable('stagingStorageAccountName', $stagingStorageAccountName,[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable('workspaceName', $workspaceName,[System.EnvironmentVariableTarget]::Machine)
 
 # Create path
 Write-Output "Create ArcBox path"
@@ -107,7 +109,7 @@ Install-WindowsFeature -Name "DHCP" -IncludeManagementTools
 # Installing tools
 workflow ClientTools_01
         {
-            $chocolateyAppList = 'azure-cli,az.powershell,kubernetes-cli,vcredist140,microsoft-edge,azcopy10,vscode,git,7zip,kubectx,terraform,putty.install,microsoft-windows-terminal'
+            $chocolateyAppList = 'azure-cli,az.powershell,kubernetes-cli,vcredist140,microsoft-edge,azcopy10,vscode,git,7zip,kubectx,terraform,putty.install,microsoft-windows-terminal,kubernetes-helm'
             #Run commands in parallel.
             Parallel 
                 {
@@ -162,10 +164,6 @@ workflow ClientTools_02
         }
         
 ClientTools_02 | Format-Table 
-
-# Cloning the Azure Arc Jumpstart git repository
-# Write-Output "Cloning the Azure Arc Jumpstart git repository"
-# git clone https://github.com/microsoft/azure_arc.git "C:\ArcBox\azure_arc"
 
 New-Item -path alias:kubectl -value 'C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes\client\bin\kubectl.exe'
 New-Item -path alias:azdata -value 'C:\Program Files (x86)\Microsoft SDKs\Azdata\CLI\wbin\azdata.cmd'

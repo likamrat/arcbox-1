@@ -10,6 +10,12 @@ Write-Host "`n"
 kubectl get nodes
 azdata --version
 
+Write-Host "Enabling Container Insights for AKS"
+Set-Item Env:\SuppressAzurePowerShellBreakingChangeWarnings "true"
+$env:resourceGroup=(Get-AzResource -Name ArcBox-Client).ResourceGroupName
+$env:workspaceId=(Get-AzResource -Name $env:workspaceName).ResourceId
+Get-AzAksCluster -ResourceGroupName $env:resourceGroup -Name ArcBox-Data | Enable-AzAksAddon -Name Monitoring -WorkspaceResourceId $env:workspaceId
+
 Write-Host "Installing Azure Data Studio Extensions"
 Write-Host "`n"
 
@@ -141,7 +147,12 @@ Remove-Item C:\users\$env:USERNAME\.kube\config
 Remove-Item C:\users\$env:USERNAME\.kube\config-k3s
 Move-Item C:\users\$env:USERNAME\.kube\config_tmp C:\users\$env:USERNAME\.kube\config
 $env:KUBECONFIG="C:\users\$env:USERNAME\.kube\config"
-kubectx
+
+# Adding Azure Arc enabled Kubernetes CLI extensions
+Write-Output "Adding Azure Arc enabled Kubernetes CLI extensions"
+az extension add --name "connectedk8s" -y
+az extension add --name "k8s-configuration" -y
+az extension add --name "k8s-extension" -y
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized

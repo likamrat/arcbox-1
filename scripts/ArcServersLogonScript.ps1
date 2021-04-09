@@ -230,8 +230,6 @@ $Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh;
 
 Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command
 
-# Remove-Item "C:\ArcBox\$agentScript" -Recurse -Force
-
 # Creating Hyper-V Manager desktop shortcut
 Copy-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Hyper-V Manager.lnk" -Destination "C:\Users\All Users\Desktop" -Force
 
