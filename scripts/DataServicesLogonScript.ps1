@@ -147,18 +147,12 @@ Remove-Item C:\users\$env:USERNAME\.kube\config
 Remove-Item C:\users\$env:USERNAME\.kube\config-k3s
 Move-Item C:\users\$env:USERNAME\.kube\config_tmp C:\users\$env:USERNAME\.kube\config
 $env:KUBECONFIG="C:\users\$env:USERNAME\.kube\config"
-kubectx
 
 # Adding Azure Arc enabled Kubernetes CLI extensions
 Write-Output "Adding Azure Arc enabled Kubernetes CLI extensions"
 az extension add --name "connectedk8s" -y
 az extension add --name "k8s-configuration" -y
 az extension add --name "k8s-extension" -y
-
-# # Enabling Container insights for Rancher K3s using Kubernetes extension 
-# Write-Host "Enabling Container insights for Rancher K3s using Kubernetes extension"
-# kubectx arcboxk3s 
-# az k8s-extension create -n "azuremonitor-containers" --cluster-name ArcBox-K3s --resource-group $env:resourceGroup --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
