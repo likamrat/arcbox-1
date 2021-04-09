@@ -23,7 +23,7 @@ $subId = $subscriptionId
 $resourceGroup = $myResourceGroup
 $location = $Azurelocation
 $proxy=""
-$resourceTags= @{"Project"="jumpstart_azure_arc_sql"}
+$resourceTags= @{"Project"="jumpstart_arcbox"}
 
 # These optional variables can be replaced with valid service principal details
 # if you would like to use this script for a registration at scale scenario, i.e. run it on multiple machines remotely

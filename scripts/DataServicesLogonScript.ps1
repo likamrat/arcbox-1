@@ -155,10 +155,10 @@ az extension add --name "connectedk8s" -y
 az extension add --name "k8s-configuration" -y
 az extension add --name "k8s-extension" -y
 
-# Enabling Container insights for Rancher K3s using Kubernetes extension 
-Write-Host "Enabling Container insights for Rancher K3s using Kubernetes extension"
-kubectx arcboxk3s 
-az k8s-extension create -n "azuremonitor-containers" --cluster-name ArcBox-K3s --resource-group $env:resourceGroup --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
+# # Enabling Container insights for Rancher K3s using Kubernetes extension 
+# Write-Host "Enabling Container insights for Rancher K3s using Kubernetes extension"
+# kubectx arcboxk3s 
+# az k8s-extension create -n "azuremonitor-containers" --cluster-name ArcBox-K3s --resource-group $env:resourceGroup --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
 
 # Starting Azure Data Studio
 Start-Process -FilePath "C:\Program Files\Azure Data Studio\azuredatastudio.exe" -WindowStyle Maximized
