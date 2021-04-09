@@ -18,6 +18,6 @@
  --location $Azurelocation `
  --subscription-id $subscriptionId `
  --cloud "AzureCloud" `
- --tags "Project=jumpstart_azure_arc_servers"
+ --tags "Project=jumpstart_arcbox"
  
  if($LastExitCode -eq 0){Write-Host -ForegroundColor yellow "To view your onboarded server(s), navigate to https://ms.portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.HybridCompute%2Fmachines"}
