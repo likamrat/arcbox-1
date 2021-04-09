@@ -101,7 +101,7 @@
           },
           "aksClusterName": {
             "value": "[parameters('aksClusterName')]"
-          },
+          },       
           "resourceTags": {
             "value": {
               "Project": "jumpstart_arcbox"
@@ -176,6 +176,9 @@
           "myIpAddress": {
             "value": "[parameters('myIpAddress')]"
           },
+          "workspaceName": {
+            "value": "[parameters('workspaceName')]"
+          },          
           "stagingStorageAccountName": {
             "value": "[reference('stagingStorageAccountDeployment').outputs.storageAccountName.value]"
           }
