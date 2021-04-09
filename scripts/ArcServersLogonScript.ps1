@@ -226,11 +226,9 @@ Write-Output "Onboarding the nested Linux VM as an Azure Arc enabled server"
 $secpasswd = ConvertTo-SecureString $nestedLinuxPassword -AsPlainText -Force
 $Credentials = New-Object System.Management.Automation.PSCredential($nestedLinuxUsername, $secpasswd)
 $SessionID = New-SSHSession -ComputerName $vmIp -Credential $Credentials -Force #Connect Over SSH
-$Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh;sudo sh /home/$nestedLinuxUsername/installArcAgentModified.sh"
+$Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh"
 
 Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command
-
-# Remove-Item "C:\ArcBox\$agentScript" -Recurse -Force
 
 # Creating Hyper-V Manager desktop shortcut
 Copy-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Hyper-V Manager.lnk" -Destination "C:\Users\All Users\Desktop" -Force
