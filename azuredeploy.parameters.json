@@ -28,9 +28,6 @@
         },
         "workspaceName": {
             "value": "<your unique Log Analytics workspace name>"
-        },
-        "automationAccountName": {
-            "value": "<your Automation Account name>"
         }
     }
 }
