@@ -316,7 +316,7 @@ if (Test-Path 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server') {
         Write-Warning -Message "Could not locate SQL Server startup errorlog at $errorLogPath\Log. The vCore property will not be present in the registered resource."
     }
 
-    $resource_name = $env:computername
+    $resource_name = hostname
     if ($i -ne "MSSQLSERVER") {
         $resource_name = '{0}_{1}' -f $env:computername, $i
     }
