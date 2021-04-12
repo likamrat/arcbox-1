@@ -6,16 +6,16 @@
             "value": "arcboxaks"
         },
         "sshRSAPublicKey": {
-            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhC31Od0YR0vV5Q0Q5y0UAu/Vbp1daxE9N7bfWA9ZLYhP3V2e2YOSDX0/jPEH3roMmPbmnFYJBQSNoPydNv0hbITXlg9BYh47Ot4dZ402vOQbK14lTsxxeCA39j0LsZeC+6LNFiksgpgCrspLlm6/T+/G2oIeLeQf0/My8xP/n5G/Y3ZLByaojaasTgNz3zbO3uDt/daOiX++9j6oqT5D3PV2dCD08hmuMkYQ8GWD5ZPd/MW78JJuz3rwAWQshqlPBWlPCPWaTQzjqXkuj++w7bhe3ffDlRo50NaMcMI0gekfO8vP7heulCF0HoWZeEmNmkxdTxSagM9N+wn46x6NZ lior@My-PC"
+            "value": ""
         },
         "spnClientId": {
-            "value": "051b9a58-4a83-48de-b610-0e7ae1bca3fb"
+            "value": ""
         },
         "spnClientSecret": {
-            "value": "53ed1458-a77d-4201-9c21-4fe24a0981fa"
+            "value": ""
         },                
         "spnTenantId": {
-            "value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            "value": ""
         },
         "windowsAdminUsername": {
             "value": "arcdemo"
@@ -24,7 +24,7 @@
             "value": "ArcPassword123!!"
         },
         "myIpAddress": {
-            "value": "73.221.107.214"
+            "value": ""
         },
         "workspaceName": {
             "value": "arcboxworkspace"
