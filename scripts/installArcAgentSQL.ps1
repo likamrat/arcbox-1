@@ -362,24 +362,18 @@ $Np
 
 Restart-Service -Name 'MSSQLSERVER' -Force
 
-# Set Log Analytics Workspace Environment Variables
-$WorkspaceName = "log-analytics-" + (Get-Random -Maximum 99999)
-
 # Get the resource group
 Get-AzResourceGroup -Name $resourceGroup -ErrorAction Stop -Verbose
-
-# Create the workspace
-New-AzOperationalInsightsWorkspace -Location $location -Name $WorkspaceName -Sku Standard -ResourceGroupName $resourceGroup -Verbose
 
 Write-Host "Enabling Log Analytics Solutions"
 $Solutions = "Security", "Updates", "SQLAssessment"
 foreach ($solution in $Solutions) {
-    Set-AzOperationalInsightsIntelligencePack -ResourceGroupName $resourceGroup -WorkspaceName $WorkspaceName -IntelligencePackName $solution -Enabled $true -Verbose
+    Set-AzOperationalInsightsIntelligencePack -ResourceGroupName $resourceGroup -WorkspaceName $env:workspaceName -IntelligencePackName $solution -Enabled $true -Verbose
 }
 
 # Get the workspace ID and Key
-$workspaceId = $(az resource show --resource-group $resourceGroup --name $WorkspaceName --resource-type "Microsoft.OperationalInsights/workspaces" --query properties.customerId -o tsv)
-$workspaceKey = $(az monitor log-analytics workspace get-shared-keys --resource-group $resourceGroup --workspace-name $WorkspaceName --query primarySharedKey -o tsv)
+$workspaceId = $(az resource show --resource-group $resourceGroup --name $env:workspaceName --resource-type "Microsoft.OperationalInsights/workspaces" --query properties.customerId -o tsv)
+$workspaceKey = $(az monitor log-analytics workspace get-shared-keys --resource-group $resourceGroup --workspace-name $env:workspaceName --query primarySharedKey -o tsv)
 
 $Setting = @{ "workspaceId" = $workspaceId }
 $protectedSetting = @{ "workspaceKey" = $workspaceKey }
