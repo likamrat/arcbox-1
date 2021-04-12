@@ -228,7 +228,7 @@ $Credentials = New-Object System.Management.Automation.PSCredential($nestedLinux
 $SessionID = New-SSHSession -ComputerName $vmIp -Credential $Credentials -Force #Connect Over SSH
 $Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh;sudo sh /home/$nestedLinuxUsername/installArcAgentModified.sh"
 
-Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command
+Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command 2>/dev/null
 
 # Creating Hyper-V Manager desktop shortcut
 Copy-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Hyper-V Manager.lnk" -Destination "C:\Users\All Users\Desktop" -Force
