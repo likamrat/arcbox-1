@@ -1,10 +1,10 @@
-# ArcBox - An Azure Arc Jumpstart project
+# Jumpstart ArcBox - An Azure Arc Jumpstart project
 
-## ArcBox - Overview
+## Jumpstart ArcBox - Overview
 
 ![ArcBox architecture diagram](./img/arch.png)
 
-ArcBox is a project that provides an easy to deploy sandbox for all things Azure Arc. ArcBox is designed to be completely self-contained within a single Azure subscription and resource group, which will make it easy for a user to get hands-on with all available Azure Arc technology with nothing more than an available Azure subscription.
+Jumpstart ArcBox is a project that provides an easy to deploy sandbox for all things Azure Arc. ArcBox is designed to be completely self-contained within a single Azure subscription and resource group, which will make it easy for a user to get hands-on with all available Azure Arc technology with nothing more than an available Azure subscription.
 
 Azure Arc capabilities available in ArcBox include:
 
@@ -25,8 +25,6 @@ ArcBox deploys one Rancher (K3s) cluster running on an Azure virtual machine. Th
 ArcBox deploys an AKS cluster, which is then used to deploy an Azure Arc enabled data services data controller.
 
 ![ArcBox data services diagram](./img/dataservices.png)
-
-### Unified Operations Management
 
 ## Prerequisites
 
@@ -87,7 +85,9 @@ Here is a brief explanation of ArcBox's automation steps for you to get familiar
 
 ## Deployment Option 1: Azure Portal
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdkirby-ms%2Farcbox%2Fmain%2Fazuredeploy.json)
+* Click the [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdkirby-ms%2Farcbox%2Fmain%2Fazuredeploy.json) button and enter values for the the ARM template parameters.
+
+  ![Screenshot showing example parameters](./img/parameters.png)
 
 ## Deployment Option 2: Azure CLI
 
@@ -97,7 +97,7 @@ Here is a brief explanation of ArcBox's automation steps for you to get familiar
 
   * *aksDnsPrefix* - AKS unique DNS prefix
   * *sshRSAPublicKey* - Your SSH public key
-  * *spnClientId* - Your Auzre service principal id
+  * *spnClientId* - Your Azure service principal id
   * *spnClientSecret* - Your Azure service principal secret
   * *spnTenantId* - Your Azure tenant id
   * *windowsAdminUsername* - Client Windows VM Administrator name
@@ -109,12 +109,41 @@ Here is a brief explanation of ArcBox's automation steps for you to get familiar
 
 * Now you will deploy the ARM template. Navigate to the local cloned [deployment folder](../) and run the below command:
 
-    ```shell
-    az group create --name <Name of the Azure resource group> --location <Azure Region>
-    az deployment group create \
-    --resource-group <Name of the Azure resource group> \
-    --template-file azuredeploy.json \
-    --parameters azuredeploy.parameters.json 
-    ```
+  ```shell
+  az group create --name <Name of the Azure resource group> --location <Azure Region>
+  az deployment group create \
+  --resource-group <Name of the Azure resource group> \
+  --template-file azuredeploy.json \
+  --parameters azuredeploy.parameters.json 
+  ```
 
-    ![Screenshot showing az group create](./img/azgroupcreate.png)
+  ![Screenshot showing az group create](./img/azgroupcreate.png)
+
+  ![Screenshot showing az deployment group create](./img/azdeploy.png)
+
+* After deployment, you should see the ArcBox resources inside your resource group.
+
+  ![Screenshot showing az deployment group create](./img/deployedresources.png)
+
+* Open a remote desktop connection into ArcBox-Client. Upon logging in, multiple automated scripts will open and start running. These scripts will take 10-20 minutes to finish. Once completed, Azure Data Studio will start. At this point, the deployment is complete.
+
+  ![Screenshot showing ArcBox-Client](./img/clientscript.png)
+
+## Example ArcBox usage scenarios
+
+ArcBox is a sandbox that can be used for a large variety of use cases, such as a sandbox environment for testing and training or kickstarter for proof of concept projects. Some suggested next steps for you to try in your ArcBox are:
+
+* Deploy GitOps configurations on the K8s clusters
+* Build policy initiatives that apply to your Azure Arc enabled resources
+* Incorporate your own tooling and automation into the existing automation framework
+* Build a certificate/secret/key management strategy with your Azure Arc resources
+
+## Clean up the deployment
+
+To clean up your deployment, simply delete the resource group.
+
+```shell
+az group delete -n <name of your resource group>
+```
+
+![Screenshot showing az group delete](./img/azdelete.png)
