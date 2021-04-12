@@ -9,7 +9,7 @@
     "datasource.connections": [
         {
             "options": {
-                "connectionName": "",
+                "connectionName": "ArcSQLMI",
                 "server": "arc_sql_mi",
                 "database": "",
                 "authenticationType": "SqlLogin",
@@ -26,7 +26,7 @@
         },
         {
             "options": {
-                "connectionName": "",
+                "connectionName": "ArcPostgres",
                 "host": "arc_postgres",
                 "authenticationType": "SqlLogin",
                 "dbname": "",
