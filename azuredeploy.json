@@ -160,9 +160,6 @@
           "spnTenantId": {
             "value": "[parameters('spnTenantId')]"
           },
-          "aksClusterName": {
-            "value": "[parameters('aksClusterName')]"
-          },
           "myIpAddress": {
             "value": "[parameters('myIpAddress')]"
           },
