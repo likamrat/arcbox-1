@@ -24,6 +24,7 @@ $resourceGroup = $myResourceGroup
 $location = $Azurelocation
 $proxy=""
 $resourceTags= @{"Project"="jumpstart_arcbox"}
+$workspaceName = $logAnalyticsWorkspaceName
 
 # These optional variables can be replaced with valid service principal details
 # if you would like to use this script for a registration at scale scenario, i.e. run it on multiple machines remotely
@@ -368,12 +369,12 @@ Get-AzResourceGroup -Name $resourceGroup -ErrorAction Stop -Verbose
 Write-Host "Enabling Log Analytics Solutions"
 $Solutions = "Security", "Updates", "SQLAssessment"
 foreach ($solution in $Solutions) {
-    Set-AzOperationalInsightsIntelligencePack -ResourceGroupName $resourceGroup -WorkspaceName $env:workspaceName -IntelligencePackName $solution -Enabled $true -Verbose
+    Set-AzOperationalInsightsIntelligencePack -ResourceGroupName $resourceGroup -WorkspaceName $workspaceName -IntelligencePackName $solution -Enabled $true -Verbose
 }
 
 # Get the workspace ID and Key
-$workspaceId = $(az resource show --resource-group $resourceGroup --name $env:workspaceName --resource-type "Microsoft.OperationalInsights/workspaces" --query properties.customerId -o tsv)
-$workspaceKey = $(az monitor log-analytics workspace get-shared-keys --resource-group $resourceGroup --workspace-name $env:workspaceName --query primarySharedKey -o tsv)
+$workspaceId = $(az resource show --resource-group $resourceGroup --name $workspaceName --resource-type "Microsoft.OperationalInsights/workspaces" --query properties.customerId -o tsv)
+$workspaceKey = $(az monitor log-analytics workspace get-shared-keys --resource-group $resourceGroup --workspace-name $workspaceName --query primarySharedKey -o tsv)
 
 $Setting = @{ "workspaceId" = $workspaceId }
 $protectedSetting = @{ "workspaceKey" = $workspaceKey }
