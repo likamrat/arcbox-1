@@ -1,6 +1,7 @@
 #!/bin/sh
 
 apt-get update
+apt install -y python-ctypes
 
 # Download the installation package
 wget https://aka.ms/azcmagent -O ~/install_linux_azcmagent.sh
