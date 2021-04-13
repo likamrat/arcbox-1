@@ -28,7 +28,7 @@
       "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
       "galleryName": "Updates"
     },
-    "templateBaseUrl": "https://raw.githubusercontent.com/likamrat/arcbox-1/replace_func/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/dkirby-ms/arcbox/main/",
     "policyTemplate": "[uri(variables('templateBaseUrl'), 'mgmt/policyAzureArcBuiltins.json')]",
     "automationAccountName": "[concat('ArcBox-Automation-', uniquestring(resourceGroup().id))]"
   },
