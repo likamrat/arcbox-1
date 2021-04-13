@@ -209,7 +209,7 @@ Write-Output "Onboarding the nested Linux VM as an Azure Arc enabled server"
 $secpasswd = ConvertTo-SecureString $nestedLinuxPassword -AsPlainText -Force
 $Credentials = New-Object System.Management.Automation.PSCredential($nestedLinuxUsername, $secpasswd)
 $SessionID = New-SSHSession -ComputerName $vmIp -Credential $Credentials -Force #Connect Over SSH
-$Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh;sudo sh /home/$nestedLinuxUsername/installArcAgentModified.sh"
+$Command = "sudo chmod +x /home/$nestedLinuxUsername/installArcAgentModified.sh;sudo sh /home/$nestedLinuxUsername/installArcAgentModified.sh exec 2>/dev/null"
 
 Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command
 
