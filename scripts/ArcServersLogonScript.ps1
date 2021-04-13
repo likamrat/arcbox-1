@@ -188,27 +188,9 @@ $vmIp = Get-Content "$ipFile"
 
 # Copying the Azure Arc Connected Agent to nested VMs
 Write-Output "Copying the Azure Arc onboarding script to the nested VMs"
-(Get-Content -path "$agentScript\installArcAgent.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgent1.ps1"
-(Get-Content -path "$agentScript\ArcAgent1.ps1" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgent2.ps1"
-(Get-Content -path "$agentScript\ArcAgent2.ps1" -Raw) -replace '\$resourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgent3.ps1"
-(Get-Content -path "$agentScript\ArcAgent3.ps1" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgent4.ps1"
-(Get-Content -path "$agentScript\ArcAgent4.ps1" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgent5.ps1"
-(Get-Content -path "$agentScript\ArcAgent5.ps1" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.ps1"
-
-(Get-Content -path "$agentScript\installArcAgentSQL.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgentSQL1.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL1.ps1" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgentSQL2.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL2.ps1" -Raw) -replace '\$myResourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgentSQL3.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL3.ps1" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgentSQL4.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL4.ps1" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgentSQL5.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL5.ps1" -Raw) -replace '\$logAnalyticsWorkspaceName',"'$env:workspaceName'" | Set-Content -Path "$agentScript\ArcAgentSQL6.ps1"
-(Get-Content -path "$agentScript\ArcAgentSQL6.ps1" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentSQLModified.ps1"
-
-(Get-Content -path "$agentScript\installArcAgent.sh" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" | Set-Content -Path "$agentScript\ArcAgent1.sh"
-(Get-Content -path "$agentScript\ArcAgent1.sh" -Raw) -replace '\$spnClientSecret',"'$env:spnClientSecret'" | Set-Content -Path "$agentScript\ArcAgent2.sh"
-(Get-Content -path "$agentScript\ArcAgent2.sh" -Raw) -replace '\$resourceGroup',"'$env:resourceGroup'" | Set-Content -Path "$agentScript\ArcAgent3.sh"
-(Get-Content -path "$agentScript\ArcAgent3.sh" -Raw) -replace '\$spnTenantId',"'$env:spnTenantId'" | Set-Content -Path "$agentScript\ArcAgent4.sh"
-(Get-Content -path "$agentScript\ArcAgent4.sh" -Raw) -replace '\$azureLocation',"'$env:azureLocation'" | Set-Content -Path "$agentScript\ArcAgent5.sh"
-(Get-Content -path "$agentScript\ArcAgent5.sh" -Raw) -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.sh"
+(Get-Content -path "$agentScript\installArcAgent.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" -replace '\$spnClientSecret',"'$env:spnClientSecret'" -replace '\$resourceGroup',"'$env:resourceGroup'" -replace '\$spnTenantId',"'$env:spnTenantId'" -replace '\$azureLocation',"'$env:azureLocation'" -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.ps1"
+(Get-Content -path "$agentScript\installArcAgentSQL.ps1" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" -replace '\$spnClientSecret',"'$env:spnClientSecret'" -replace '\$myResourceGroup',"'$env:resourceGroup'" -replace '\$spnTenantId',"'$env:spnTenantId'" -replace '\$azureLocation',"'$env:azureLocation'" -replace '\$logAnalyticsWorkspaceName',"'$env:workspaceName'" -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentSQLModified.ps1"
+(Get-Content -path "$agentScript\installArcAgent.sh" -Raw) -replace '\$spnClientId',"'$env:spnClientId'" -replace '\$spnClientSecret',"'$env:spnClientSecret'" -replace '\$resourceGroup',"'$env:resourceGroup'" -replace '\$spnTenantId',"'$env:spnTenantId'" -replace '\$azureLocation',"'$env:azureLocation'" -replace '\$subscriptionId',"'$env:subscriptionId'" | Set-Content -Path "$agentScript\installArcAgentModified.sh"
 
 Copy-VMFile "ArcBoxWin" -SourcePath "$agentScript\installArcAgentModified.ps1" -DestinationPath C:\Temp\installArcAgent.ps1 -CreateFullPath -FileSource Host
 Copy-VMFile "ArcBoxSQL" -SourcePath "$agentScript\installArcAgentSQLModified.ps1" -DestinationPath C:\Temp\installArcAgentSQL.ps1 -CreateFullPath -FileSource Host
